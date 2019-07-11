@@ -1,4 +1,6 @@
-# evaluation_frontend
+# Front End for Evaluation System | TAPES
+
+> The Totally Anonymous Professor Evaluation System
 
 ## Project setup
 ```
