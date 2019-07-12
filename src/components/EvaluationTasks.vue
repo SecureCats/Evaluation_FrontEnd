@@ -9,6 +9,9 @@
 <script>
 export default {
   name: "EvaluationTasks",
+  props: {
+    tasks: Object
+  },
   data() {
     return {};
   }

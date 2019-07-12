@@ -31,7 +31,7 @@
     </v-navigation-drawer>
 
     <v-content id="main-contents">
-      <Contents />
+      <Contents :tasks="items" v-on:proceedToNextTask="nextTaskHandler"/>
     </v-content>
   </v-app>
 </template>
@@ -54,6 +54,19 @@ export default {
         { id: "5", title: "课程任务 5", status: 0 }
       ]
     };
+  },
+  methods: {
+    /**
+     * *nextTaskHandler(stage)
+     * !Updates progress on the sidebar
+     */
+    nextTaskHandler(stage) {
+      if (stage - 1 < this.items.length) {
+        this.items[stage - 1].status = 1
+      } else {
+        // You have completed all tasks.
+      }
+    }
   }
 };
 </script>

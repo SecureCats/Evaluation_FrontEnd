@@ -1,8 +1,8 @@
 <template>
   <v-layout column fill-height>
-    <EvaluationTitle stage="1" />
+    <EvaluationTitle :stage="currentStage" />
 
-    <EvaluationTasks tasks="Hello world" />
+    <EvaluationTasks :tasks="{msg: 'Hello world'}" />
 
     <v-layout id="nav-buttons" row>
       <v-spacer />
@@ -30,12 +30,17 @@ export default {
     EvaluationTitle,
     EvaluationTasks
   },
+  props: {
+    tasks: Array
+  },
   data() {
     return {
       showSnackbar: false,
       snackbarText: "你确定要进行下一项评教吗？",
       countdownProgress: 100,
       timeoutId: null,
+
+      currentStage: 1,
     };
   },
   methods: {
@@ -67,7 +72,8 @@ export default {
     nextTaskFinalConfirm() {
       clearTimeout(this.timeoutId)
       this.showSnackbar = false;
-      alert("test");
+      this.currentStage = this.currentStage + 1
+      this.$emit('proceedToNextTask', this.currentStage)
     }
   }
 };

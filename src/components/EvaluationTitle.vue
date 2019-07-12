@@ -29,11 +29,13 @@
 <script>
 export default {
   name: "EvaluationTitle",
+  props: {
+    stage: Number
+  },
   data() {
     return {
       semester: 2019,
       classNum: 1901,
-      stage: 5
     };
   }
 };
