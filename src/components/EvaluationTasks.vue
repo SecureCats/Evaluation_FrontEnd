@@ -1,14 +1,19 @@
 <template>
   <v-layout id="task-content" column>
     <template v-for="question in task.questions">
-      <v-layout column="" :key="question.id">
+      <v-layout column :key="question.id">
         <v-layout row>
-          <v-icon size="18" color="primary">thumbs_up_down</v-icon>
+          <v-icon size="18">thumb_up</v-icon>
           <span id="question-title">{{ question.description }}</span>
         </v-layout>
         <v-radio-group column>
           <template v-for="option in question.options">
-            <v-radio :key="option.value" :label="option.description" color="primary"/>
+            <v-radio
+              :key="option.value"
+              :label="option.description"
+              color="primary"
+              :value="option.value"
+            />
           </template>
         </v-radio-group>
       </v-layout>
