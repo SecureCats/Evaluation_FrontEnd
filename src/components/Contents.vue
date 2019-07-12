@@ -12,10 +12,10 @@
       </v-btn>
     </v-layout>
 
-    <v-snackbar v-model="showSnackbar" color="error" top>
+    <v-snackbar v-model="showSnackbar" top>
       <v-progress-circular :size="20" v-model="countdownProgress"></v-progress-circular>
       <span id="snackbarInfo">{{ snackbarText }}</span>
-      <v-btn flat @click="nextTaskFinalConfirm">是的</v-btn>
+      <v-btn flat color="pink" @click="nextTaskFinalConfirm">是的</v-btn>
     </v-snackbar>
   </v-layout>
 </template>
@@ -23,6 +23,7 @@
 <script>
 import EvaluationTitle from "@/components/EvaluationTitle";
 import EvaluationTasks from "@/components/EvaluationTasks";
+
 export default {
   name: "Contents",
   components: {
@@ -33,7 +34,8 @@ export default {
     return {
       showSnackbar: false,
       snackbarText: "你确定要进行下一项评教吗？",
-      countdownProgress: 100
+      countdownProgress: 100,
+      timeoutId: null,
     };
   },
   methods: {
@@ -44,7 +46,7 @@ export default {
     setSnackbarCountdown(timeLeft, timeTotal) {
       this.countdownProgress = (timeLeft * 100) / timeTotal;
       if (timeLeft > 0) {
-        setTimeout(() => {
+        this.timeoutId = setTimeout(() => {
           this.setSnackbarCountdown(timeLeft - 300, timeTotal);
         }, 300); // Update progress every 0.3 seconds.
       }
@@ -63,6 +65,7 @@ export default {
      * !Final confirmation button, authenticates and proceed to next task
      */
     nextTaskFinalConfirm() {
+      clearTimeout(this.timeoutId)
       this.showSnackbar = false;
       alert("test");
     }
