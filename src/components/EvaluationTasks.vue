@@ -1,8 +1,18 @@
 <template>
-  <v-layout column fill-height>
-    <div id="task-content">
-      {{ tasks }}
-    </div>
+  <v-layout id="task-content" column>
+    <template v-for="question in task.questions">
+      <v-layout column="" :key="question.id">
+        <v-layout row>
+          <v-icon size="18" color="primary">thumbs_up_down</v-icon>
+          <span id="question-title">{{ question.description }}</span>
+        </v-layout>
+        <v-radio-group column>
+          <template v-for="option in question.options">
+            <v-radio :key="option.value" :label="option.description" color="primary"/>
+          </template>
+        </v-radio-group>
+      </v-layout>
+    </template>
   </v-layout>
 </template>
 
@@ -10,7 +20,8 @@
 export default {
   name: "EvaluationTasks",
   props: {
-    tasks: Array
+    stage: Number,
+    task: Object
   },
   data() {
     return {};
@@ -20,6 +31,14 @@ export default {
 
 <style scoped>
 #task-content {
-  padding: 0 0 0 24px;
+  padding: 24px 0 24px 24px;
+}
+#question-title {
+  padding: 0 0 0 12px;
+  font-size: 16px;
+  font-weight: 700;
+}
+#question-options {
+  font-size: 14px !important;
 }
 </style>

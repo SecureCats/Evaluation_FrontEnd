@@ -1,12 +1,12 @@
 <template>
-  <v-layout column fill-height>
+  <v-layout column>
     <EvaluationTitle :stage="currentStage" :tasks="tasks" />
 
-    <EvaluationTasks :tasks="tasks" />
+    <EvaluationTasks :stage="currentStage" :task="tasks[currentStage - 1]" />
 
-    <v-layout id="nav-buttons" row>
+    <v-layout id="nav-buttons">
       <v-spacer />
-      <v-btn id="next-item-btn" color="primary" depressed @click="nextTaskOnClick">
+      <v-btn id="next-item-btn" color="primary" round large depressed @click="nextTaskOnClick">
         <span>下一步</span>
         <v-icon dark right>navigate_next</v-icon>
       </v-btn>

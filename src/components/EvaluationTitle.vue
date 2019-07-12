@@ -5,7 +5,7 @@
       <v-spacer></v-spacer>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-chip label color="primary" text-color="white" v-on="on">
+          <v-chip color="primary" text-color="white" v-on="on">
             学年：{{ semester }} - {{ semester + 1 }}
             <v-icon right>schedule</v-icon>
           </v-chip>
@@ -14,7 +14,7 @@
       </v-tooltip>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-chip label color="success" text-color="white" v-on="on">
+          <v-chip color="success" text-color="white" v-on="on">
             班级：{{ classNum }}
             <v-icon right>face</v-icon>
           </v-chip>
@@ -22,7 +22,10 @@
         <span>欢迎 {{ classNum }} 教学班的同学</span>
       </v-tooltip>
     </v-toolbar>
-    <div id="stage-indicator">第 {{ stage }} 项：{{ tasks[stage - 1].title }}</div>
+    <v-layout id="stage-container" row>
+      <v-icon color="#a9a9a9" size="17px">apps</v-icon>
+      <span id="stage-indicator">第 {{ stage }} 项：{{ tasks[stage - 1].title }}</span>
+    </v-layout>
   </v-layout>
 </template>
 
@@ -47,8 +50,11 @@ export default {
   font-family: "Noto Serif SC", serif !important;
   font-weight: 700;
 }
-#stage-indicator {
+#stage-container {
   padding: 0 0 24px 24px;
+}
+#stage-indicator {
+  margin-left: 8px;
   color: #a9a9a9;
 }
 </style>
