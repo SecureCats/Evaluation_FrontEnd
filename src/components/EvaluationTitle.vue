@@ -5,20 +5,16 @@
       <v-spacer></v-spacer>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-chip color="primary" text-color="white" v-on="on">
-            学年：{{ semester }}
+          <v-chip label color="primary" text-color="white" v-on="on">
+            学年：{{ semester }} - {{ semester + 1 }}
             <v-icon right>schedule</v-icon>
           </v-chip>
         </template>
-        <span>你正在参加第 {{ semester }} 学年的评教任务</span>
+        <span>你正在参加 {{ semester }} - {{ semester + 1 }} 学年的评教任务</span>
       </v-tooltip>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-chip
-            color="success"
-            text-color="white"
-            v-on="on"
-          >
+          <v-chip label color="success" text-color="white" v-on="on">
             班级：{{ classNum }}
             <v-icon right>face</v-icon>
           </v-chip>
@@ -35,9 +31,9 @@ export default {
   name: "EvaluationTitle",
   data() {
     return {
-      semester: "2016",
-      classNum: "001",
-      stage: "5"
+      semester: 2019,
+      classNum: 1901,
+      stage: 5
     };
   }
 };

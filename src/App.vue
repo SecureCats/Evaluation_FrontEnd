@@ -20,8 +20,8 @@
               <v-list-tile-title>{{ item.id + ". " + item.title }}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-icon v-if="item.status" color="success" size="20">{{ item.icon }}</v-icon>
-              <v-icon v-else color="error" size="20">{{ item.icon }}</v-icon>
+              <v-icon v-if="item.status" color="success" size="20">check_circle</v-icon>
+              <v-icon v-else color="error" size="20">remove_circle</v-icon>
             </v-list-tile-action>
           </v-list-tile>
         </v-list>
@@ -47,12 +47,11 @@ export default {
   data() {
     return {
       items: [
-        { id: "1", title: "课程难度", icon: "check_circle", status: 1 },
-        { id: "2", title: "课程任务 1", icon: "remove_circle", status: 0 },
-        { id: "3", title: "课程任务 2", icon: "remove_circle", status: 0 },
-        { id: "4", title: "课程任务 3", icon: "remove_circle", status: 0 },
-        { id: "5", title: "课程任务 4", icon: "remove_circle", status: 0 },
-        { id: "6", title: "综合评价", icon: "remove_circle", status: 0 }
+        { id: "1", title: "课程任务 1", status: 1 },
+        { id: "2", title: "课程任务 2", status: 0 },
+        { id: "3", title: "课程任务 3", status: 0 },
+        { id: "4", title: "课程任务 4", status: 0 },
+        { id: "5", title: "课程任务 5", status: 0 }
       ]
     };
   }
