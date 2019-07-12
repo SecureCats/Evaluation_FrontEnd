@@ -1,21 +1,26 @@
 <template>
   <v-layout column fill-height>
-    <EvaluationTitle :stage="currentStage" />
+    <EvaluationTitle :stage="currentStage" :tasks="tasks" />
 
-    <EvaluationTasks :tasks="{msg: 'Hello world'}" />
+    <EvaluationTasks :tasks="tasks" />
 
     <v-layout id="nav-buttons" row>
       <v-spacer />
-      <v-btn id="next-item-btn" color="primary" depressed @click="nextTaskFirstConfirm">
+      <v-btn id="next-item-btn" color="primary" depressed @click="nextTaskOnClick">
         <span>下一步</span>
         <v-icon dark right>navigate_next</v-icon>
       </v-btn>
     </v-layout>
 
-    <v-snackbar v-model="showSnackbar" top>
+    <v-snackbar v-model="showNextTaskSnackbar" top color="primary">
       <v-progress-circular :size="20" v-model="countdownProgress"></v-progress-circular>
-      <span id="snackbarInfo">{{ snackbarText }}</span>
-      <v-btn flat color="pink" @click="nextTaskFinalConfirm">是的</v-btn>
+      <span id="snackbarInfo">你确定要进行下一项评教吗？</span>
+      <v-btn flat @click="nextTaskFinalConfirm">是的</v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="showCompletedAllSnackbar" top color="success">
+      <v-progress-circular :size="20" v-model="countdownProgress"></v-progress-circular>
+      <span id="snackbarInfo">全部评教任务已经完成，确认提交结果？</span>
+      <v-btn flat @click="submitTaskFinalConfirm">确认</v-btn>
     </v-snackbar>
   </v-layout>
 </template>
@@ -35,12 +40,13 @@ export default {
   },
   data() {
     return {
-      showSnackbar: false,
-      snackbarText: "你确定要进行下一项评教吗？",
+      showNextTaskSnackbar: false,
+      showCompletedAllSnackbar: false,
+
       countdownProgress: 100,
       timeoutId: null,
 
-      currentStage: 1,
+      currentStage: 1
     };
   },
   methods: {
@@ -57,11 +63,17 @@ export default {
       }
     },
     /**
-     * *nextTaskFirstConfirm()
+     * *nextTaskOnClick()
      * !Show snackbar and double confirmation button
      */
-    nextTaskFirstConfirm() {
-      this.showSnackbar = true;
+    nextTaskOnClick() {
+      let totalTasks = this.tasks.length;
+      this.tasks[this.currentStage - 1].status = 1;
+      if (this.currentStage < totalTasks) {
+        this.showNextTaskSnackbar = true;
+      } else {
+        this.showCompletedAllSnackbar = true;
+      }
       let countdownTime = 6 * 1000; // 6 seconds
       this.setSnackbarCountdown(countdownTime, countdownTime);
     },
@@ -70,10 +82,15 @@ export default {
      * !Final confirmation button, authenticates and proceed to next task
      */
     nextTaskFinalConfirm() {
-      clearTimeout(this.timeoutId)
-      this.showSnackbar = false;
-      this.currentStage = this.currentStage + 1
-      this.$emit('proceedToNextTask', this.currentStage)
+      clearTimeout(this.timeoutId);
+      this.showNextTaskSnackbar = false;
+      this.currentStage = this.currentStage + 1;
+      this.$emit("proceedToNextTask", this.currentStage);
+    },
+    submitTaskFinalConfirm() {
+      clearTimeout(this.timeoutId);
+      this.showCompletedAllSnackbar = false;
+      // ! TO-DO: Submit results
     }
   }
 };

@@ -1,7 +1,7 @@
 <template>
   <v-layout column fill-height>
     <div id="task-content">
-      这里是任务
+      {{ tasks }}
     </div>
   </v-layout>
 </template>
@@ -10,7 +10,7 @@
 export default {
   name: "EvaluationTasks",
   props: {
-    tasks: Object
+    tasks: Array
   },
   data() {
     return {};

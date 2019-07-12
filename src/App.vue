@@ -15,12 +15,12 @@
           <span id="title">进度：</span>
         </v-toolbar-title>
         <v-list>
-          <v-list-tile v-for="item in items" :key="item.title">
+          <v-list-tile v-for="task in tasks" :key="task.title">
             <v-list-tile-content>
-              <v-list-tile-title>{{ item.id + ". " + item.title }}</v-list-tile-title>
+              <v-list-tile-title>{{ task.id + ". " + task.title }}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
-              <v-icon v-if="item.status" color="success" size="20">check_circle</v-icon>
+              <v-icon v-if="task.status" color="success" size="20">check_circle</v-icon>
               <v-icon v-else color="error" size="20">remove_circle</v-icon>
             </v-list-tile-action>
           </v-list-tile>
@@ -31,7 +31,7 @@
     </v-navigation-drawer>
 
     <v-content id="main-contents">
-      <Contents :tasks="items" v-on:proceedToNextTask="nextTaskHandler"/>
+      <Contents :tasks="tasks" v-on:proceedToNextTask="nextTaskHandler"/>
     </v-content>
   </v-app>
 </template>
@@ -46,12 +46,12 @@ export default {
   },
   data() {
     return {
-      items: [
-        { id: "1", title: "课程任务 1", status: 1 },
-        { id: "2", title: "课程任务 2", status: 0 },
-        { id: "3", title: "课程任务 3", status: 0 },
-        { id: "4", title: "课程任务 4", status: 0 },
-        { id: "5", title: "课程任务 5", status: 0 }
+      tasks: [
+        { id: 1, title: "课程任务 1", status: 0 },
+        { id: 2, title: "课程任务 2", status: 0 },
+        { id: 3, title: "课程任务 3", status: 0 },
+        { id: 4, title: "课程任务 4", status: 0 },
+        { id: 5, title: "课程任务 5", status: 0 }
       ]
     };
   },
@@ -61,11 +61,15 @@ export default {
      * !Updates progress on the sidebar
      */
     nextTaskHandler(stage) {
-      if (stage - 1 < this.items.length) {
-        this.items[stage - 1].status = 1
-      } else {
-        // You have completed all tasks.
-      }
+      // eslint-disable-next-line no-console
+      console.log(stage)
+      // ? Seems inessential ...
+      // if (stage - 1 < this.tasks.length) {
+      //   let completedStage = stage - 2
+      //   this.tasks[completedStage].status = 1
+      // } else {
+      //   // You have completed all tasks.
+      // }
     }
   }
 };

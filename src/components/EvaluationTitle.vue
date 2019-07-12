@@ -22,7 +22,7 @@
         <span>欢迎 {{ classNum }} 教学班的同学</span>
       </v-tooltip>
     </v-toolbar>
-    <div id="stage-indicator">第 {{ stage }} 项：授课教师</div>
+    <div id="stage-indicator">第 {{ stage }} 项：{{ tasks[stage - 1].title }}</div>
   </v-layout>
 </template>
 
@@ -30,7 +30,8 @@
 export default {
   name: "EvaluationTitle",
   props: {
-    stage: Number
+    stage: Number,
+    tasks: Array
   },
   data() {
     return {
