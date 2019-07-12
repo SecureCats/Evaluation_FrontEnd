@@ -1,6 +1,9 @@
 <template>
 <v-layout column fill-height>
-  <div id="tasks">label</div>
+  <div>任务 1</div>
+  <div>任务 2</div>
+  <div>任务 3</div>
+  <div>任务 4</div>
 </v-layout>
 </template>
 

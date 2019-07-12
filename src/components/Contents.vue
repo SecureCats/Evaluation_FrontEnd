@@ -1,16 +1,12 @@
 <template>
   <v-layout column fill-height>
-    <EvaluationTitle procedure="1" />
+    <EvaluationTitle stage="1" />
 
-    <EvaluationTasks msg="Hello world" />
+    <EvaluationTasks tasks="Hello world" />
 
     <v-layout id="nav-buttons" row>
       <v-spacer/>
-      <v-btn id="next-item-btn">
-        <v-icon left>navigate_before</v-icon>
-        <span>上一步</span>
-      </v-btn>
-      <v-btn id="next-item-btn" color="primary">
+      <v-btn id="next-item-btn" color="primary" depressed>
         <span>下一步</span>
         <v-icon dark right>navigate_next</v-icon>
       </v-btn>
