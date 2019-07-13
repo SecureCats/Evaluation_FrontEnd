@@ -1,6 +1,6 @@
 <template>
   <v-app id="app">
-    <v-navigation-drawer class="secondary" light absolute permanent :width="340">
+    <v-navigation-drawer id="sidebar" class="secondary" light absolute permanent :width="340">
       <v-layout column fill-height>
         <v-toolbar flat color="transparent">
           <v-toolbar-side-icon>
@@ -69,6 +69,33 @@ export default {
                 { id: "B", description: "可以忍一手..." },
                 { id: "C", description: "不满意！" }
               ]
+            },
+            {
+              id: 3,
+              description: "任务一的标题 2 是这个呀！",
+              options: [
+                { id: "A", description: "满意！" },
+                { id: "B", description: "可以忍一手..." },
+                { id: "C", description: "不满意！" }
+              ]
+            },
+            {
+              id: 4,
+              description: "任务一的标题 2 是这个呀！",
+              options: [
+                { id: "A", description: "满意！" },
+                { id: "B", description: "可以忍一手..." },
+                { id: "C", description: "不满意！" }
+              ]
+            },
+            {
+              id: 5,
+              description: "任务一的标题 2 是这个呀！",
+              options: [
+                { id: "A", description: "满意！" },
+                { id: "B", description: "可以忍一手..." },
+                { id: "C", description: "不满意！" }
+              ]
             }
           ]
         },
@@ -129,5 +156,8 @@ export default {
 }
 #tasks-list {
   font-family: "Noto Serif SC", serif;
+}
+#sidebar {
+  position: fixed;
 }
 </style>
