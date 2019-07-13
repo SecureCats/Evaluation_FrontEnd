@@ -15,9 +15,9 @@
           <span id="title">进度：</span>
         </v-toolbar-title>
         <v-list id="tasks-list">
-          <v-list-tile v-for="task in tasks" :key="task.title">
+          <v-list-tile v-for="(task, index) in tasks" :key="task.title">
             <v-list-tile-content>
-              <v-list-tile-title>{{ task.id + ". " + task.title }}</v-list-tile-title>
+              <v-list-tile-title>{{ (index + 1) + ". " + task.title }}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
               <v-icon v-if="task.status" color="success" size="20">check_circle</v-icon>
