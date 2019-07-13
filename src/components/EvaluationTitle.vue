@@ -6,11 +6,16 @@
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-chip color="primary" text-color="white" v-on="on">
-            学年：{{ semester }} - {{ semester + 1 }}
+            <span v-if="semester[2] === '1'">
+            学年：{{ semester[0] }} - {{ semester[1] }} 秋季学期
+            </span>
+            <span v-else>
+              学年：{{ semester[0] }} - {{ semester[1] }} 春季学期
+            </span>
             <v-icon right>schedule</v-icon>
           </v-chip>
         </template>
-        <span>你正在参加 {{ semester }} - {{ semester + 1 }} 学年的评教任务</span>
+        <span>你正在参加 {{ studentInfo.semester }} 学年的评教任务</span>
       </v-tooltip>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
@@ -31,23 +36,27 @@
 
 <script>
 export default {
-  name: "EvaluationTitle",
+  name: 'EvaluationTitle',
   props: {
     stage: Number,
-    tasks: Array
+    tasks: Array,
+    studentInfo: Object
   },
   data() {
     return {
-      semester: 2019,
-      classNum: 1901,
-    };
+      // Class number: 1901, stands for Major 19 - Class 01
+      classNum: this.studentInfo.class,
+      // Semester: 2018-2019-1 -> ['2018', '2019', '1']
+      //  means: fall semester of 2018-2019
+      semester: this.studentInfo.semester.split('-')
+    }
   }
-};
+}
 </script>
 
 <style scoped>
 #toolbar-title {
-  font-family: "Noto Serif SC", serif !important;
+  font-family: 'Noto Serif SC', serif !important;
   font-weight: 700;
 }
 #stage-container {

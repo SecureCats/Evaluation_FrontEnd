@@ -1,6 +1,6 @@
 <template>
   <v-layout column>
-    <EvaluationTitle :stage="currentStage" :tasks="tasks" />
+    <EvaluationTitle :stage="currentStage" :tasks="tasks" :studentInfo="studentInfo" />
 
     <EvaluationTasks
       :stage="currentStage"
@@ -31,17 +31,18 @@
 </template>
 
 <script>
-import EvaluationTitle from "@/components/EvaluationTitle";
-import EvaluationTasks from "@/components/EvaluationTasks";
+import EvaluationTitle from '@/components/EvaluationTitle'
+import EvaluationTasks from '@/components/EvaluationTasks'
 
 export default {
-  name: "Contents",
+  name: 'Contents',
   components: {
     EvaluationTitle,
     EvaluationTasks
   },
   props: {
-    tasks: Array
+    tasks: Array,
+    studentInfo: Object
   },
   data() {
     return {
@@ -54,7 +55,7 @@ export default {
       currentStage: 1,
 
       answerSheet: []
-    };
+    }
   },
   methods: {
     /**
@@ -62,11 +63,11 @@ export default {
      * * Count down for snackbar notification, 6 seconds
      */
     setSnackbarCountdown(timeLeft, timeTotal) {
-      this.countdownProgress = (timeLeft * 100) / timeTotal;
+      this.countdownProgress = (timeLeft * 100) / timeTotal
       if (timeLeft > 0) {
         this.timeoutId = setTimeout(() => {
-          this.setSnackbarCountdown(timeLeft - 300, timeTotal);
-        }, 300); //! Update progress every 0.3 seconds.
+          this.setSnackbarCountdown(timeLeft - 300, timeTotal)
+        }, 300) //! Update progress every 0.3 seconds.
       }
     },
 
@@ -75,15 +76,15 @@ export default {
      * * Show snackbar and double confirmation button
      */
     nextTaskOnClick() {
-      let totalTasks = this.tasks.length;
-      this.tasks[this.currentStage - 1].status = 1;
+      let totalTasks = this.tasks.length
+      this.tasks[this.currentStage - 1].status = 1
       if (this.currentStage < totalTasks) {
-        this.showNextTaskSnackbar = true;
+        this.showNextTaskSnackbar = true
       } else {
-        this.showCompletedAllSnackbar = true;
+        this.showCompletedAllSnackbar = true
       }
-      let countdownTime = 6 * 1000; // 6 seconds
-      this.setSnackbarCountdown(countdownTime, countdownTime);
+      let countdownTime = 6 * 1000 // 6 seconds
+      this.setSnackbarCountdown(countdownTime, countdownTime)
     },
 
     /**
@@ -91,11 +92,11 @@ export default {
      * * Final confirmation button, authenticates and proceed to next task
      */
     nextTaskFinalConfirm() {
-      clearTimeout(this.timeoutId);
-      this.showNextTaskSnackbar = false;
-      this.currentStage = this.currentStage + 1;
-      this.$emit("proceedToNextTask", this.currentStage);
-      this.$refs.evaluationTasks.getAnswers();
+      clearTimeout(this.timeoutId)
+      this.showNextTaskSnackbar = false
+      this.currentStage = this.currentStage + 1
+      this.$emit('proceedToNextTask', this.currentStage)
+      this.$refs.evaluationTasks.getAnswers()
     },
 
     /**
@@ -104,7 +105,7 @@ export default {
      * @param answerList
      */
     answerCollector(answerList) {
-      this.answerSheet.push(answerList);
+      this.answerSheet.push(answerList)
     },
 
     /**
@@ -112,16 +113,16 @@ export default {
      * * Submit answers to backend
      */
     submitTaskFinalConfirm() {
-      clearTimeout(this.timeoutId);
-      this.$refs.evaluationTasks.getAnswers();
-      this.showCompletedAllSnackbar = false;
+      clearTimeout(this.timeoutId)
+      this.$refs.evaluationTasks.getAnswers()
+      this.showCompletedAllSnackbar = false
 
       // TODO: Submit results
       // eslint-disable-next-line no-console
-      console.log(JSON.stringify(this.answerSheet));
+      console.log(JSON.stringify(this.answerSheet))
     }
   }
-};
+}
 </script>
 
 <style>

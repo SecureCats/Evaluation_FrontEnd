@@ -50,7 +50,7 @@ export default {
 
 <style scoped>
 #task-content {
-  padding: 24px 0 24px 24px;
+  padding: 24px;
 }
 #question-title {
   padding: 0 0 0 12px;
