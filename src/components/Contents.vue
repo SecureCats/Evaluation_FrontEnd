@@ -2,7 +2,12 @@
   <v-layout column>
     <EvaluationTitle :stage="currentStage" :tasks="tasks" />
 
-    <EvaluationTasks :stage="currentStage" :task="tasks[currentStage - 1]" />
+    <EvaluationTasks
+      :stage="currentStage"
+      :task="tasks[currentStage - 1]"
+      v-on:collectAnswers="answerCollector"
+      ref="evaluationTasks"
+    />
 
     <v-layout id="nav-buttons">
       <v-spacer />
@@ -46,25 +51,28 @@ export default {
       countdownProgress: 100,
       timeoutId: null,
 
-      currentStage: 1
+      currentStage: 1,
+
+      answerSheet: []
     };
   },
   methods: {
     /**
-     * *setSnackbarCountdown(timeLeft, timeTotal)
-     * !Count down for snackbar notification, 6 seconds
+     * setSnackbarCountdown
+     * * Count down for snackbar notification, 6 seconds
      */
     setSnackbarCountdown(timeLeft, timeTotal) {
       this.countdownProgress = (timeLeft * 100) / timeTotal;
       if (timeLeft > 0) {
         this.timeoutId = setTimeout(() => {
           this.setSnackbarCountdown(timeLeft - 300, timeTotal);
-        }, 300); // Update progress every 0.3 seconds.
+        }, 300); //! Update progress every 0.3 seconds.
       }
     },
+
     /**
-     * *nextTaskOnClick()
-     * !Show snackbar and double confirmation button
+     * nextTaskOnClick()
+     * * Show snackbar and double confirmation button
      */
     nextTaskOnClick() {
       let totalTasks = this.tasks.length;
@@ -77,20 +85,40 @@ export default {
       let countdownTime = 6 * 1000; // 6 seconds
       this.setSnackbarCountdown(countdownTime, countdownTime);
     },
+
     /**
-     * *nextTaskFinalConfirm()
-     * !Final confirmation button, authenticates and proceed to next task
+     * nextTaskFinalConfirm()
+     * * Final confirmation button, authenticates and proceed to next task
      */
     nextTaskFinalConfirm() {
       clearTimeout(this.timeoutId);
       this.showNextTaskSnackbar = false;
       this.currentStage = this.currentStage + 1;
       this.$emit("proceedToNextTask", this.currentStage);
+      this.$refs.evaluationTasks.getAnswers();
     },
+
+    /**
+     * answerCollector(answerList)
+     * * Collect answers from compenent `EvaluationTasks.vue` and then appends them to answerList
+     * @param answerList
+     */
+    answerCollector(answerList) {
+      this.answerSheet.push(answerList);
+    },
+
+    /**
+     * submitTaskFinalConfirm()
+     * * Submit answers to backend
+     */
     submitTaskFinalConfirm() {
       clearTimeout(this.timeoutId);
+      this.$refs.evaluationTasks.getAnswers();
       this.showCompletedAllSnackbar = false;
-      // ! TO-DO: Submit results
+
+      // TODO: Submit results
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(this.answerSheet));
     }
   }
 };

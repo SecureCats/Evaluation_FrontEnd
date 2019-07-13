@@ -6,7 +6,7 @@
           <v-icon size="18">thumb_up</v-icon>
           <span id="question-title">{{ question.description }}</span>
         </v-layout>
-        <v-radio-group column>
+        <v-radio-group column v-model="answerList[question.id]">
           <template v-for="option in question.options">
             <v-radio
               :key="option.id"
@@ -29,7 +29,21 @@ export default {
     task: Object
   },
   data() {
-    return {};
+    return {
+      answerList: {}
+    };
+  },
+  // mounted() {
+  //   // let questionsCount = this.task.questions.length
+  //   this.task.questions.forEach(question => {
+  //     this.answerList[question.id] = null;
+  //   });
+  // },
+  methods: {
+    getAnswers() {
+      this.$emit("collectAnswers", this.answerList);
+      this.answerList = {};
+    }
   }
 };
 </script>
