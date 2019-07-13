@@ -125,7 +125,8 @@ export default {
 
 <style>
 #app {
-  font-family: "Noto Sans SC", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", "Noto Sans SC", sans-serif;
   background-color: #ffffff;
 }
 #title {

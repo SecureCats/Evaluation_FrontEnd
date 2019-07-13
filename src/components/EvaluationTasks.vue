@@ -41,7 +41,7 @@ export default {
 #question-title {
   padding: 0 0 0 12px;
   font-size: 16px;
-  font-weight: 700;
+  /* font-weight: 700; */
 }
 #question-options {
   font-size: 14px !important;
