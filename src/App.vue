@@ -56,18 +56,18 @@ export default {
               id: 1,
               description: "任务一的标题 1 是这个呀！",
               options: [
-                { description: "满意！", value: 3 },
-                { description: "可以忍一手...", value: 2 },
-                { description: "不满意！", value: 1 }
+                { id: "A", description: "满意！" },
+                { id: "B", description: "可以忍一手..." },
+                { id: "C", description: "不满意！" }
               ]
             },
             {
               id: 2,
               description: "任务一的标题 2 是这个呀！",
               options: [
-                { description: "满意！", value: 3 },
-                { description: "可以忍一手...", value: 2 },
-                { description: "不满意！", value: 1 }
+                { id: "A", description: "满意！" },
+                { id: "B", description: "可以忍一手..." },
+                { id: "C", description: "不满意！" }
               ]
             }
           ]
@@ -81,18 +81,18 @@ export default {
               id: 1,
               description: "任务二的标题 1 是这个呀！",
               options: [
-                { description: "满意！", value: 3 },
-                { description: "可以忍一手...", value: 2 },
-                { description: "不满意！", value: 1 }
+                { id: "A", description: "满意！" },
+                { id: "B", description: "可以忍一手..." },
+                { id: "C", description: "不满意！" }
               ]
             },
             {
               id: 2,
               description: "任务二的标题 2 是这个呀！",
               options: [
-                { description: "满意！", value: 3 },
-                { description: "可以忍一手...", value: 2 },
-                { description: "不满意！", value: 1 }
+                { id: "A", description: "满意！" },
+                { id: "B", description: "可以忍一手..." },
+                { id: "C", description: "不满意！" }
               ]
             }
           ]

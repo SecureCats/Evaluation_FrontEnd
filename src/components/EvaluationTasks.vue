@@ -9,10 +9,10 @@
         <v-radio-group column>
           <template v-for="option in question.options">
             <v-radio
-              :key="option.value"
+              :key="option.id"
               :label="option.description"
               color="primary"
-              :value="option.value"
+              :value="option.id"
             />
           </template>
         </v-radio-group>
