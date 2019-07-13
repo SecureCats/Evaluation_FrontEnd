@@ -14,7 +14,7 @@ export default new Router({
       component: Home
     },
     {
-      path: '/',
+      path: '*',
       name: '404',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
