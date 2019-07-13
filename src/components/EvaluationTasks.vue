@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  name: "EvaluationTasks",
+  name: 'EvaluationTasks',
   props: {
     stage: Number,
     task: Object
@@ -31,7 +31,7 @@ export default {
   data() {
     return {
       answerList: {}
-    };
+    }
   },
   // mounted() {
   //   // let questionsCount = this.task.questions.length
@@ -41,11 +41,11 @@ export default {
   // },
   methods: {
     getAnswers() {
-      this.$emit("collectAnswers", this.answerList);
-      this.answerList = {};
+      this.$emit('collectAnswers', this.answerList)
+      this.answerList = {}
     }
   }
-};
+}
 </script>
 
 <style scoped>

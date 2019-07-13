@@ -37,10 +37,10 @@
 </template>
 
 <script>
-import Contents from "@/components/Contents";
+import Contents from '@/components/Contents'
 
 export default {
-  name: "Home",
+  name: 'Home',
   components: {
     Contents
   },
@@ -48,82 +48,82 @@ export default {
     return {
       studentInfo: {
         class: this.$route.params.class,
-        semester: this.$route.params.semester,
+        semester: this.$route.params.semester
       },
       tasks: [
         {
           id: 1,
-          title: "课程任务 1",
+          title: '课程任务 1',
           status: 0,
           questions: [
             {
               id: 1,
-              description: "任务一的标题 1 是这个呀！",
+              description: '任务一的标题 1 是这个呀！',
               options: [
-                { id: "A", description: "满意！" },
-                { id: "B", description: "可以忍一手..." },
-                { id: "C", description: "不满意！" }
+                { id: 'A', description: '满意！' },
+                { id: 'B', description: '可以忍一手...' },
+                { id: 'C', description: '不满意！' }
               ]
             },
             {
               id: 2,
-              description: "任务一的标题 2 是这个呀！",
+              description: '任务一的标题 2 是这个呀！',
               options: [
-                { id: "A", description: "满意！" },
-                { id: "B", description: "可以忍一手..." },
-                { id: "C", description: "不满意！" }
+                { id: 'A', description: '满意！' },
+                { id: 'B', description: '可以忍一手...' },
+                { id: 'C', description: '不满意！' }
               ]
             },
             {
               id: 3,
-              description: "任务一的标题 2 是这个呀！",
+              description: '任务一的标题 2 是这个呀！',
               options: [
-                { id: "A", description: "满意！" },
-                { id: "B", description: "可以忍一手..." },
-                { id: "C", description: "不满意！" }
+                { id: 'A', description: '满意！' },
+                { id: 'B', description: '可以忍一手...' },
+                { id: 'C', description: '不满意！' }
               ]
             },
             {
               id: 4,
-              description: "任务一的标题 2 是这个呀！",
+              description: '任务一的标题 2 是这个呀！',
               options: [
-                { id: "A", description: "满意！" },
-                { id: "B", description: "可以忍一手..." },
-                { id: "C", description: "不满意！" }
+                { id: 'A', description: '满意！' },
+                { id: 'B', description: '可以忍一手...' },
+                { id: 'C', description: '不满意！' }
               ]
             },
             {
               id: 5,
-              description: "任务一的标题 2 是这个呀！",
+              description: '任务一的标题 2 是这个呀！',
               options: [
-                { id: "A", description: "满意！" },
-                { id: "B", description: "可以忍一手..." },
-                { id: "C", description: "不满意！" }
+                { id: 'A', description: '满意！' },
+                { id: 'B', description: '可以忍一手...' },
+                { id: 'C', description: '不满意！' }
               ]
             }
           ]
         },
         {
           id: 2,
-          title: "课程任务 2",
+          title: '课程任务 2',
           status: 0,
           questions: [
             {
               id: 1,
-              description: "任务二的标题 1 是这个呀！",
+              description: '任务二的标题 1 是这个呀！',
               options: [
-                { id: "A", description: "满意！" },
-                { id: "B", description: "可以忍一手..." },
-                { id: "C", description: "不满意！" }
+                { id: 'A', description: '满意！' },
+                { id: 'B', description: '可以忍一手...' },
+                { id: 'C', description: '不满意！' }
               ]
             }
           ]
         },
-        { id: 3, title: "课程任务 3", status: 0 },
-        { id: 4, title: "课程任务 4", status: 0 },
-        { id: 5, title: "课程任务 5", status: 0 }
+        { id: 3, title: '课程任务 3', status: 0 },
+        { id: 4, title: '课程任务 4', status: 0 },
+        { id: 5, title: '课程任务 5', status: 0 }
       ]
-    };
+    }
   },
   methods: {
     /**
@@ -132,7 +132,7 @@ export default {
      */
     nextTaskHandler(stage) {
       // eslint-disable-next-line no-console
-      console.log(stage);
+      console.log(stage)
       // ? Seems inessential ...
       // if (stage - 1 < this.tasks.length) {
       //   let completedStage = stage - 2
@@ -142,19 +142,19 @@ export default {
       // }
     }
   }
-};
+}
 </script>
 
 <style scoped>
 #title {
-  font-family: "Noto Serif SC", serif;
+  font-family: 'Noto Serif SC', serif;
   font-weight: 700;
 }
 #main-contents {
   margin-left: 360px;
 }
 #tasks-list {
-  font-family: "Noto Serif SC", serif;
+  font-family: 'Noto Serif SC', serif;
 }
 #sidebar {
   position: fixed;
