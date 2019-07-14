@@ -145,6 +145,7 @@ export default {
         // TODO: Submit results
         // eslint-disable-next-line no-console
         console.log(JSON.stringify(this.answerSheet))
+        this.$router.push({ path: '/success' })
       }
     },
 
