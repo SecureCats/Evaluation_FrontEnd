@@ -29,6 +29,22 @@ export default {
   name: 'Success',
   components: {
     Footer
+  },
+  mounted() {
+    this.$confetti.start({
+      particles: [
+        {
+          type: 'heart'
+        },
+        {
+          type: 'circle'
+        }
+      ],
+      particlesPerFrame: 0.5
+    })
+    setTimeout(() => {
+      this.$confetti.stop()
+    }, 3000)
   }
 }
 </script>
