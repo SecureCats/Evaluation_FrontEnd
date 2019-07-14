@@ -6,7 +6,7 @@
           <v-icon size="18">thumb_up</v-icon>
           <span id="question-title">{{ question.description }}</span>
         </v-layout>
-        <v-radio-group column v-model="answerList[question.id]">
+        <v-radio-group column v-model="answerList[question.id]" :mandatory="true">
           <template v-for="option in question.options">
             <v-radio
               :key="option.id"
@@ -41,8 +41,19 @@ export default {
   // },
   methods: {
     getAnswers() {
-      this.$emit('collectAnswers', this.answerList)
-      this.answerList = {}
+      // The number of questions in task
+      let questionsCount = this.task.questions.length
+      // The number of answers collected
+      let answersCount = Object.keys(this.answerList).length
+
+      if (questionsCount === answersCount) {
+        // eslint-disable-next-line no-console
+        console.log(this.answerList)
+        this.$emit('collectAnswers', this.answerList)
+        this.answerList = {}
+      } else {
+        this.$emit('collectAnswers', 'undone')
+      }
     }
   }
 }

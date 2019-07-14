@@ -22,6 +22,13 @@
       <span id="snackbarInfo">你确定要进行下一项评教吗？</span>
       <v-btn flat @click="nextTaskFinalConfirm">是的</v-btn>
     </v-snackbar>
+
+    <v-snackbar v-model="showUncompletedWarning" top color="error">
+      <v-icon dark :size="20">error</v-icon>
+      <span id="snackbarInfo">你有未回答的题目，请将全部问题回答完整。</span>
+      <v-btn flat @click="closeUncompletedWarning">好的</v-btn>
+    </v-snackbar>
+
     <v-snackbar v-model="showCompletedAllSnackbar" top color="success">
       <v-progress-circular :size="20" v-model="countdownProgress"></v-progress-circular>
       <span id="snackbarInfo">全部评教任务已经完成，确认提交结果？</span>
@@ -48,12 +55,14 @@ export default {
     return {
       showNextTaskSnackbar: false,
       showCompletedAllSnackbar: false,
+      showUncompletedWarning: false,
 
       countdownProgress: 100,
       timeoutId: null,
 
       currentStage: 1,
 
+      currentAnswerList: Object,
       answerSheet: []
     }
   },
@@ -77,7 +86,7 @@ export default {
      */
     nextTaskOnClick() {
       let totalTasks = this.tasks.length
-      this.tasks[this.currentStage - 1].status = 1
+
       if (this.currentStage < totalTasks) {
         this.showNextTaskSnackbar = true
       } else {
@@ -92,11 +101,18 @@ export default {
      * * Final confirmation button, authenticates and proceed to next task
      */
     nextTaskFinalConfirm() {
+      this.$refs.evaluationTasks.getAnswers()
+
       clearTimeout(this.timeoutId)
       this.showNextTaskSnackbar = false
-      this.currentStage = this.currentStage + 1
-      this.$emit('proceedToNextTask', this.currentStage)
-      this.$refs.evaluationTasks.getAnswers()
+
+      if (this.currentAnswerList === 'undone') {
+        this.showUncompletedWarning = true
+      } else {
+        this.tasks[this.currentStage - 1].status = 1
+        this.currentStage = this.currentStage + 1
+        this.$emit('proceedToNextTask', this.currentStage)
+      }
     },
 
     /**
@@ -105,7 +121,12 @@ export default {
      * @param answerList
      */
     answerCollector(answerList) {
-      this.answerSheet.push(answerList)
+      this.currentAnswerList = answerList
+      // eslint-disable-next-line no-console
+      console.log(this.currentAnswerList)
+      if (answerList !== 'undone') {
+        this.answerSheet.push(answerList)
+      }
     },
 
     /**
@@ -113,13 +134,24 @@ export default {
      * * Submit answers to backend
      */
     submitTaskFinalConfirm() {
-      clearTimeout(this.timeoutId)
       this.$refs.evaluationTasks.getAnswers()
+
+      clearTimeout(this.timeoutId)
       this.showCompletedAllSnackbar = false
 
-      // TODO: Submit results
-      // eslint-disable-next-line no-console
-      console.log(JSON.stringify(this.answerSheet))
+      if (this.currentAnswerList === 'undone') {
+        this.showUncompletedWarning = true
+      } else {
+        this.tasks[this.currentStage - 1].status = 1
+
+        // TODO: Submit results
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(this.answerSheet))
+      }
+    },
+
+    closeUncompletedWarning() {
+      this.showUncompletedWarning = false
     }
   }
 }
