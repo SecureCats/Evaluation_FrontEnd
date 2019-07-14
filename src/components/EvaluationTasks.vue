@@ -3,7 +3,7 @@
     <template v-for="question in task.questions">
       <v-layout column :key="question.id">
         <v-layout row>
-          <v-icon size="18">thumb_up</v-icon>
+          <v-icon size="18">notes</v-icon>
           <span id="question-title">{{ question.description }}</span>
         </v-layout>
         <v-radio-group column v-model="answerList[question.id]" :mandatory="true">
