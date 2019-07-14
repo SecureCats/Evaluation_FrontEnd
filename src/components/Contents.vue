@@ -122,8 +122,6 @@ export default {
      */
     answerCollector(answerList) {
       this.currentAnswerList = answerList
-      // eslint-disable-next-line no-console
-      console.log(this.currentAnswerList)
       if (answerList !== 'undone') {
         this.answerSheet.push(answerList)
       }

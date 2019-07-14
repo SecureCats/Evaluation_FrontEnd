@@ -47,8 +47,6 @@ export default {
       let answersCount = Object.keys(this.answerList).length
 
       if (questionsCount === answersCount) {
-        // eslint-disable-next-line no-console
-        console.log(this.answerList)
         this.$emit('collectAnswers', this.answerList)
         this.answerList = {}
       } else {
