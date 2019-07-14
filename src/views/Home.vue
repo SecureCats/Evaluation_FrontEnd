@@ -58,7 +58,7 @@ export default {
           questions: [
             {
               id: 1,
-              description: '任务一的标题 1 是这个呀！',
+              description: '任务 1 的标题 1 是这个呀！',
               options: [
                 { id: 'A', description: '满意！' },
                 { id: 'B', description: '可以忍一手...' },
@@ -67,7 +67,7 @@ export default {
             },
             {
               id: 2,
-              description: '任务一的标题 2 是这个呀！',
+              description: '任务 1 的标题 2 是这个呀！',
               options: [
                 { id: 'A', description: '满意！' },
                 { id: 'B', description: '可以忍一手...' },
@@ -76,25 +76,7 @@ export default {
             },
             {
               id: 3,
-              description: '任务一的标题 2 是这个呀！',
-              options: [
-                { id: 'A', description: '满意！' },
-                { id: 'B', description: '可以忍一手...' },
-                { id: 'C', description: '不满意！' }
-              ]
-            },
-            {
-              id: 4,
-              description: '任务一的标题 2 是这个呀！',
-              options: [
-                { id: 'A', description: '满意！' },
-                { id: 'B', description: '可以忍一手...' },
-                { id: 'C', description: '不满意！' }
-              ]
-            },
-            {
-              id: 5,
-              description: '任务一的标题 2 是这个呀！',
+              description: '任务 3 的标题 2 是这个呀！',
               options: [
                 { id: 'A', description: '满意！' },
                 { id: 'B', description: '可以忍一手...' },
@@ -110,7 +92,7 @@ export default {
           questions: [
             {
               id: 1,
-              description: '任务二的标题 1 是这个呀！',
+              description: '任务 2 的标题 1 是这个呀！',
               options: [
                 { id: 'A', description: '满意！' },
                 { id: 'B', description: '可以忍一手...' },
@@ -119,9 +101,22 @@ export default {
             }
           ]
         },
-        { id: 3, title: '课程任务 3', status: 0 },
-        { id: 4, title: '课程任务 4', status: 0 },
-        { id: 5, title: '课程任务 5', status: 0 }
+        {
+          id: 3,
+          title: '课程任务 3',
+          status: 0,
+          questions: [
+            {
+              id: 1,
+              description: '任务 3 的标题 1 是这个呀！',
+              options: [
+                { id: 'A', description: '满意！' },
+                { id: 'B', description: '可以忍一手...' },
+                { id: 'C', description: '不满意！' }
+              ]
+            }
+          ]
+        },
       ]
     }
   },
