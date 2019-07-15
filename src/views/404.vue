@@ -31,7 +31,6 @@
 import Footer from '@/components/Footer'
 
 export default {
-  name: '404',
   components: {
     Footer
   }
