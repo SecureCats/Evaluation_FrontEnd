@@ -11,6 +11,7 @@
     "core-js": "^2.6.5",
     "vue": "^2.6.10",
     "vue-confetti": "^2.0.1",
+    "vue-element-loading": "^1.1.1",
     "vue-router": "^3.0.3",
     "vuetify": "^1.5.5"
   },

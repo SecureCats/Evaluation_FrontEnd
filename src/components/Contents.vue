@@ -1,5 +1,6 @@
 <template>
   <v-layout column>
+    <vue-element-loading :active="loading" spinner="bar-fade-scale" color="#3A8FCA" is-full-screen />
     <EvaluationTitle :stage="currentStage" :tasks="tasks" :studentInfo="studentInfo" />
 
     <EvaluationTasks
@@ -57,6 +58,8 @@ export default {
       showCompletedAllSnackbar: false,
       showUncompletedWarning: false,
 
+      loading: false,
+
       countdownProgress: 100,
       timeoutId: null,
 
@@ -109,9 +112,17 @@ export default {
       if (this.currentAnswerList === 'undone') {
         this.showUncompletedWarning = true
       } else {
-        this.tasks[this.currentStage - 1].status = 1
-        this.currentStage = this.currentStage + 1
-        this.$emit('proceedToNextTask', this.currentStage)
+        // Set loading animations
+        this.loading = true
+
+        // TODO: certify user credentials
+        setTimeout(() => {
+          this.tasks[this.currentStage - 1].status = 1
+          this.currentStage = this.currentStage + 1
+          this.$emit('proceedToNextTask', this.currentStage)
+
+          this.loading = false
+        }, 1000)
       }
     },
 
@@ -140,12 +151,19 @@ export default {
       if (this.currentAnswerList === 'undone') {
         this.showUncompletedWarning = true
       } else {
-        this.tasks[this.currentStage - 1].status = 1
+        this.loading = true
 
-        // TODO: Submit results
-        // eslint-disable-next-line no-console
-        console.log(JSON.stringify(this.answerSheet))
-        this.$router.push({ path: '/success' })
+        // TODO: certify user credentials
+        setTimeout(() => {
+          this.tasks[this.currentStage - 1].status = 1
+
+          // TODO: Submit results
+          // eslint-disable-next-line no-console
+          console.log(JSON.stringify(this.answerSheet))
+
+          this.loading = false
+          this.$router.push({ path: '/success' })
+        }, 1000)
       }
     },
 

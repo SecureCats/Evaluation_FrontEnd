@@ -7945,6 +7945,13 @@ vue-confetti@^2.0.1:
   resolved "https://registry.yarnpkg.com/vue-confetti/-/vue-confetti-2.0.1.tgz#ff69292058225ca5737765f77d79846d152ebd59"
   integrity sha512-2fdNxZj3K7V50rtizgXklj4xFGsG0rkWhtOKyZ35xyS6CzpWcovQj1fgcaEEMVfMXYucm5M4B3wXvS84ngEQnQ==
 
+vue-element-loading@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/vue-element-loading/-/vue-element-loading-1.1.1.tgz#3cb693ddd4538c769a063bb4c01553f909236f18"
+  integrity sha512-/HJqdWbBgyTg45c+u3oUZVyEBzC3imft8Ezrf37Ups3+PgJ1ltdmlJowx+sMXMshNa9b9v2WVHe+qp0GGgwTHw==
+  dependencies:
+    vue "^2.5.22"
+
 vue-eslint-parser@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-2.0.3.tgz#c268c96c6d94cfe3d938a5f7593959b0ca3360d1"
@@ -8011,7 +8018,7 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue@^2.6.10:
+vue@^2.5.22, vue@^2.6.10:
   version "2.6.10"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
   integrity sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ==
