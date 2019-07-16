@@ -31,7 +31,7 @@
     </v-navigation-drawer>
 
     <v-content id="main-contents">
-      <Contents :tasks="tasks" :studentInfo="studentInfo" v-on:proceedToNextTask="nextTaskHandler" />
+      <Contents :tasks="tasks" :studentInfo="studentInfo" />
     </v-content>
   </v-layout>
 </template>
@@ -50,181 +50,266 @@ export default {
         class: this.$route.params.class,
         semester: this.$route.params.semester
       },
-      tasks: [
-        {
-          id: '2018-2019-2-019',
-          title: '汇编语言与接口',
-          status: 0,
-          questions: [
-            {
-              id: 1,
-              description: '老师对教学科目的知识掌握如何？',
-              options: [
-                {
-                  id: 'A',
-                  description: '老师自己本身也没有很好的掌握所教科目的知识'
-                },
-                {
-                  id: 'B',
-                  description:
-                    '老师基本可以讲清楚所教课程的内容，但是面对一些提问不能做出很好的回答'
-                },
-                {
-                  id: 'C',
-                  description:
-                    '老师可以讲清楚所教课程的内容，并且能很好的回答同学的问题'
-                },
-                {
-                  id: 'D',
-                  description:
-                    '老师可以讲清楚所教课程的内容，并且能在课本内容之上对知识进行拓展'
-                }
-              ]
-            },
-            {
-              id: 2,
-              description: '老师的教学方式如何？',
-              options: [
-                {
-                  id: 'A',
-                  description: '念PPT我也会'
-                },
-                {
-                  id: 'B',
-                  description: '正常的上课，偶尔有提问或者课堂小测'
-                },
-                {
-                  id: 'C',
-                  description: '有活跃的课堂气氛，热烈的与同学们探讨问题'
-                }
-              ]
-            },
-            {
-              id: 3,
-              description: '老师对知识的讲解能力如何？',
-              options: [
-                {
-                  id: 'A',
-                  description: '不知所云，不如看书'
-                },
-                {
-                  id: 'B',
-                  description:
-                    '上课能听懂整体知识的架构，细节之处还要看PPT和课本才能完全搞懂'
-                },
-                {
-                  id: 'C',
-                  description: '老师讲课内容生动形象，深入浅出，通俗易懂'
-                }
-              ]
-            },
-            {
-              id: 4,
-              description:
-                '老师在课堂上是否有接打电话，迟到早退，辱骂学生等不当行为？',
-              options: [
-                {
-                  id: 'A',
-                  description: '出现过'
-                },
-                {
-                  id: 'B',
-                  description: '从来没有出现过'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          id: '2018-2019-2-201',
-          title: '计算机组成原理',
-          status: 0,
-          questions: [
-            {
-              id: 1,
-              description: '老师对教学科目的知识掌握如何？',
-              options: [
-                {
-                  id: 'A',
-                  description: '老师自己本身也没有很好的掌握所教科目的知识'
-                },
-                {
-                  id: 'B',
-                  description:
-                    '老师基本可以讲清楚所教课程的内容，但是面对一些提问不能做出很好的回答'
-                },
-                {
-                  id: 'C',
-                  description:
-                    '老师可以讲清楚所教课程的内容，并且能很好的回答同学的问题'
-                },
-                {
-                  id: 'D',
-                  description:
-                    '老师可以讲清楚所教课程的内容，并且能在课本内容之上对知识进行拓展'
-                }
-              ]
-            },
-            {
-              id: 2,
-              description: '老师的教学方式如何？',
-              options: [
-                {
-                  id: 'A',
-                  description: '念PPT我也会'
-                },
-                {
-                  id: 'B',
-                  description: '正常的上课，偶尔有提问或者课堂小测'
-                },
-                {
-                  id: 'C',
-                  description: '有活跃的课堂气氛，热烈的与同学们探讨问题'
-                }
-              ]
-            },
-            {
-              id: 3,
-              description: '老师对知识的讲解能力如何？',
-              options: [
-                {
-                  id: 'A',
-                  description: '不知所云，不如看书'
-                },
-                {
-                  id: 'B',
-                  description:
-                    '上课能听懂整体知识的架构，细节之处还要看PPT和课本才能完全搞懂'
-                },
-                {
-                  id: 'C',
-                  description: '老师讲课内容生动形象，深入浅出，通俗易懂'
-                }
-              ]
-            },
-            {
-              id: 4,
-              description:
-                '老师在课堂上是否有接打电话，迟到早退，辱骂学生等不当行为？',
-              options: [
-                {
-                  id: 'A',
-                  description: '出现过'
-                },
-                {
-                  id: 'B',
-                  description: '从来没有出现过'
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      tasks: []
     }
   },
-  mounted() {
+  beforeMount() {
     // TODO: fetching task list requires attention
     // this.fetchTaskList()
+    this.tasks = [
+      {
+        id: '2018-2019-2-019',
+        title: '汇编语言与接口',
+        status: 0,
+        questions: [
+          {
+            id: 1,
+            description: '老师对教学科目的知识掌握如何？',
+            options: [
+              {
+                id: 'A',
+                description: '老师自己本身也没有很好的掌握所教科目的知识'
+              },
+              {
+                id: 'B',
+                description:
+                  '老师基本可以讲清楚所教课程的内容，但是面对一些提问不能做出很好的回答'
+              },
+              {
+                id: 'C',
+                description:
+                  '老师可以讲清楚所教课程的内容，并且能很好的回答同学的问题'
+              },
+              {
+                id: 'D',
+                description:
+                  '老师可以讲清楚所教课程的内容，并且能在课本内容之上对知识进行拓展'
+              }
+            ]
+          },
+          {
+            id: 2,
+            description: '老师的教学方式如何？',
+            options: [
+              {
+                id: 'A',
+                description: '念PPT我也会'
+              },
+              {
+                id: 'B',
+                description: '正常的上课，偶尔有提问或者课堂小测'
+              },
+              {
+                id: 'C',
+                description: '有活跃的课堂气氛，热烈的与同学们探讨问题'
+              }
+            ]
+          },
+          {
+            id: 3,
+            description: '老师对知识的讲解能力如何？',
+            options: [
+              {
+                id: 'A',
+                description: '不知所云，不如看书'
+              },
+              {
+                id: 'B',
+                description:
+                  '上课能听懂整体知识的架构，细节之处还要看PPT和课本才能完全搞懂'
+              },
+              {
+                id: 'C',
+                description: '老师讲课内容生动形象，深入浅出，通俗易懂'
+              }
+            ]
+          },
+          {
+            id: 4,
+            description:
+              '老师在课堂上是否有接打电话，迟到早退，辱骂学生等不当行为？',
+            options: [
+              {
+                id: 'A',
+                description: '出现过'
+              },
+              {
+                id: 'B',
+                description: '从来没有出现过'
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: '2018-2019-2-208',
+        title: '计算机网络',
+        status: 0,
+        questions: [
+          {
+            id: 1,
+            description: '老师对教学科目的知识掌握如何？',
+            options: [
+              {
+                id: 'A',
+                description: '老师自己本身也没有很好的掌握所教科目的知识'
+              },
+              {
+                id: 'B',
+                description:
+                  '老师基本可以讲清楚所教课程的内容，但是面对一些提问不能做出很好的回答'
+              },
+              {
+                id: 'C',
+                description:
+                  '老师可以讲清楚所教课程的内容，并且能很好的回答同学的问题'
+              },
+              {
+                id: 'D',
+                description:
+                  '老师可以讲清楚所教课程的内容，并且能在课本内容之上对知识进行拓展'
+              }
+            ]
+          },
+          {
+            id: 2,
+            description: '老师的教学方式如何？',
+            options: [
+              {
+                id: 'A',
+                description: '念PPT我也会'
+              },
+              {
+                id: 'B',
+                description: '正常的上课，偶尔有提问或者课堂小测'
+              },
+              {
+                id: 'C',
+                description: '有活跃的课堂气氛，热烈的与同学们探讨问题'
+              }
+            ]
+          },
+          {
+            id: 3,
+            description: '老师对知识的讲解能力如何？',
+            options: [
+              {
+                id: 'A',
+                description: '不知所云，不如看书'
+              },
+              {
+                id: 'B',
+                description:
+                  '上课能听懂整体知识的架构，细节之处还要看PPT和课本才能完全搞懂'
+              },
+              {
+                id: 'C',
+                description: '老师讲课内容生动形象，深入浅出，通俗易懂'
+              }
+            ]
+          },
+          {
+            id: 4,
+            description:
+              '老师在课堂上是否有接打电话，迟到早退，辱骂学生等不当行为？',
+            options: [
+              {
+                id: 'A',
+                description: '出现过'
+              },
+              {
+                id: 'B',
+                description: '从来没有出现过'
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: '2018-2019-2-201',
+        title: '计算机组成原理',
+        status: 0,
+        questions: [
+          {
+            id: 1,
+            description: '老师对教学科目的知识掌握如何？',
+            options: [
+              {
+                id: 'A',
+                description: '老师自己本身也没有很好的掌握所教科目的知识'
+              },
+              {
+                id: 'B',
+                description:
+                  '老师基本可以讲清楚所教课程的内容，但是面对一些提问不能做出很好的回答'
+              },
+              {
+                id: 'C',
+                description:
+                  '老师可以讲清楚所教课程的内容，并且能很好的回答同学的问题'
+              },
+              {
+                id: 'D',
+                description:
+                  '老师可以讲清楚所教课程的内容，并且能在课本内容之上对知识进行拓展'
+              }
+            ]
+          },
+          {
+            id: 2,
+            description: '老师的教学方式如何？',
+            options: [
+              {
+                id: 'A',
+                description: '念PPT我也会'
+              },
+              {
+                id: 'B',
+                description: '正常的上课，偶尔有提问或者课堂小测'
+              },
+              {
+                id: 'C',
+                description: '有活跃的课堂气氛，热烈的与同学们探讨问题'
+              }
+            ]
+          },
+          {
+            id: 3,
+            description: '老师对知识的讲解能力如何？',
+            options: [
+              {
+                id: 'A',
+                description: '不知所云，不如看书'
+              },
+              {
+                id: 'B',
+                description:
+                  '上课能听懂整体知识的架构，细节之处还要看PPT和课本才能完全搞懂'
+              },
+              {
+                id: 'C',
+                description: '老师讲课内容生动形象，深入浅出，通俗易懂'
+              }
+            ]
+          },
+          {
+            id: 4,
+            description:
+              '老师在课堂上是否有接打电话，迟到早退，辱骂学生等不当行为？',
+            options: [
+              {
+                id: 'A',
+                description: '出现过'
+              },
+              {
+                id: 'B',
+                description: '从来没有出现过'
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   methods: {
     /**
@@ -246,21 +331,6 @@ export default {
           console.log(resp.data)
           this.tasks = resp.data
         })
-    },
-    /**
-     * *nextTaskHandler(stage)
-     * !Updates progress on the sidebar
-     */
-    nextTaskHandler(stage) {
-      // eslint-disable-next-line no-console
-      console.log(stage)
-      // ? Seems inessential ...
-      // if (stage - 1 < this.tasks.length) {
-      //   let completedStage = stage - 2
-      //   this.tasks[completedStage].status = 1
-      // } else {
-      //   // You have completed all tasks.
-      // }
     }
   }
 }
