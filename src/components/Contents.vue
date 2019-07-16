@@ -69,7 +69,17 @@ export default {
       answerSheet: []
     }
   },
+  mounted() {
+    let url = 'https://jsonplaceholder.typicode.com/users'
+    this.$http.get(url).then(resp => {
+      this.debugging(resp.data)
+    })
+  },
   methods: {
+    debugging(debugInfo) {
+      // eslint-disable-next-line no-console
+      console.log(debugInfo)
+    },
     /**
      * setSnackbarCountdown
      * * Count down for snackbar notification, 6 seconds
