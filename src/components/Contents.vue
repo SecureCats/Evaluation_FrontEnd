@@ -69,17 +69,7 @@ export default {
       answerSheet: []
     }
   },
-  mounted() {
-    let url = 'https://jsonplaceholder.typicode.com/users'
-    this.$http.get(url).then(resp => {
-      this.debugging(resp.data)
-    })
-  },
   methods: {
-    debugging(debugInfo) {
-      // eslint-disable-next-line no-console
-      console.log(debugInfo)
-    },
     /**
      * setSnackbarCountdown
      * * Count down for snackbar notification, 6 seconds
@@ -125,32 +115,32 @@ export default {
         // Set loading animations
         this.loading = true
 
-        // TODO: certify user credentials
+        // TODO: certify user credentials (Change `setTimeout` to axios based http request)
         setTimeout(() => {
           this.tasks[this.currentStage - 1].status = 1
+          this.submitAnswers()
+
           this.currentStage = this.currentStage + 1
-          this.$emit('proceedToNextTask', this.currentStage)
 
           this.loading = false
+          // Back to top
+          this.$vuetify.goTo(0)
         }, 1000)
       }
     },
 
     /**
      * answerCollector(answerList)
-     * * Collect answers from compenent `EvaluationTasks.vue` and then appends them to answerList
+     * * Collect answers from component `EvaluationTasks.vue`
      * @param answerList
      */
     answerCollector(answerList) {
       this.currentAnswerList = answerList
-      if (answerList !== 'undone') {
-        this.answerSheet.push(answerList)
-      }
     },
 
     /**
      * submitTaskFinalConfirm()
-     * * Submit answers to backend
+     * * Final submit confirmation
      */
     submitTaskFinalConfirm() {
       this.$refs.evaluationTasks.getAnswers()
@@ -163,18 +153,36 @@ export default {
       } else {
         this.loading = true
 
-        // TODO: certify user credentials
+        // TODO: certify user credentials (Change `setTimeout` to axios based http request)
         setTimeout(() => {
           this.tasks[this.currentStage - 1].status = 1
 
           // TODO: Submit results
-          // eslint-disable-next-line no-console
-          console.log(JSON.stringify(this.answerSheet))
+          this.submitAnswers()
 
           this.loading = false
           this.$router.push({ path: '/success' })
         }, 1000)
       }
+    },
+
+    /**
+     * submitAnswers()
+     * * Submit answers to backend
+     */
+    submitAnswers() {
+      let currentCourseId = this.tasks[this.currentStage - 1].id
+      let answer = {
+        rnym: 'rnym',
+        result: this.currentAnswerList
+      }
+      // eslint-disable-next-line no-console
+      console.log(currentCourseId, JSON.stringify(answer))
+
+      // TODO: POST data to backend
+      let url = '/api/v1/result?course_no=' + currentCourseId + '&class_no=' + this.studentInfo.class
+      // eslint-disable-next-line no-console
+      console.log(url)
     },
 
     closeUncompletedWarning() {

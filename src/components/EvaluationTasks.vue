@@ -33,12 +33,6 @@ export default {
       answerList: {}
     }
   },
-  // mounted() {
-  //   // let questionsCount = this.task.questions.length
-  //   this.task.questions.forEach(question => {
-  //     this.answerList[question.id] = null;
-  //   });
-  // },
   methods: {
     getAnswers() {
       // The number of questions in task
