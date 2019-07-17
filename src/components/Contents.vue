@@ -180,7 +180,11 @@ export default {
       console.log(currentCourseId, JSON.stringify(answer))
 
       // TODO: POST data to backend
-      let url = '/api/v1/result?course_no=' + currentCourseId + '&class_no=' + this.studentInfo.class
+      let url =
+        '/api/v1/result?course_no=' +
+        currentCourseId +
+        '&class_no=' +
+        this.studentInfo.class
       // eslint-disable-next-line no-console
       console.log(url)
     },

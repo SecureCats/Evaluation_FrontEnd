@@ -55,14 +55,12 @@ export default {
     }
   },
   created() {
-    // TODO: fetching task list requires attention
     this.fetchTaskList()
   },
   methods: {
     /**
      * fetchTaskList()
      * * Gets task list from backend on initialization
-     * TODO: Requires CORS?
      */
     fetchTaskList() {
       let baseApiUrl = '/api/v1/'
@@ -75,8 +73,6 @@ export default {
         })
         .then(resp => {
           this.initialized = true
-          // eslint-disable-next-line no-console
-          console.log(resp.data.tasks)
           this.tasks = resp.data.tasks
         })
         .catch(() => {
