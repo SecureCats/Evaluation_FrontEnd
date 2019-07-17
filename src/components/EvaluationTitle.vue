@@ -8,7 +8,7 @@
           <v-chip color="primary" text-color="white" v-on="on">
             <span v-if="semester[2] === '1'">学年：{{ semester[0] }} - {{ semester[1] }} 秋季学期</span>
             <span v-else>学年：{{ semester[0] }} - {{ semester[1] }} 春季学期</span>
-            <v-icon right>schedule</v-icon>
+            <v-icon right color="#ffffff">schedule</v-icon>
           </v-chip>
         </template>
         <span>你正在参加 {{ studentInfo.semester }} 学年的评教任务</span>
@@ -17,7 +17,7 @@
         <template v-slot:activator="{ on }">
           <v-chip color="success" text-color="white" v-on="on">
             班级：{{ classNum }}
-            <v-icon right>face</v-icon>
+            <v-icon right color="#ffffff">face</v-icon>
           </v-chip>
         </template>
         <span>欢迎 {{ classNum }} 教学班的同学</span>
