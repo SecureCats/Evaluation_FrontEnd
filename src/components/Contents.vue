@@ -85,6 +85,22 @@ export default {
       }
     }
   },
+  mounted() {
+    // TODO: get signature, uk and public key from localStorage (or AIP)
+    let seed = {
+      // Signature: (s, e, v)
+      signature: {
+        s: 's',
+        e: 'e',
+        v: 'v'
+      },
+      // Message: uk
+      uk: 'uk',
+      // Public key
+      pubkey: 'pubkey'
+    }
+    localStorage.setItem('seed', JSON.stringify(seed))
+  },
   methods: {
     /**
      * setSnackbarCountdown
@@ -227,8 +243,18 @@ export default {
      * * Generate credentials for backend to authenticate
      */
     genCredentials() {
+      // Get seed from localStorage
+      let seed = Object()
+      if (localStorage.seed) {
+        seed = JSON.parse(localStorage.seed)
+      }
+
+      // eslint-disable-next-line no-console
+      console.log(seed)
+
+      // Private random variables
       let priv = {}
-      // eslint-disable-next-line no-unused-vars
+      // Credential parameters
       let params = {}
 
       // Generate randoms
@@ -236,6 +262,9 @@ export default {
       randAttr.forEach(i => {
         priv['r' + i] = this.genRandom(32)
       })
+      for (let i = 0; i < 20; i++) {
+        priv['r' + i.toString()] = this.genRandom(32)
+      }
 
       priv['w'] = this.genRandom(32)
       priv['r'] = this.genRandom(32)
@@ -243,6 +272,10 @@ export default {
       console.log(priv)
 
       // Calculate C sets
+      params['Cs'] = 1
+
+      // eslint-disable-next-line no-console
+      console.log(params)
     }
   }
 }
