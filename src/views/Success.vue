@@ -2,7 +2,7 @@
   <v-layout column fill-height>
     <v-toolbar flat color="transparent">
       <v-toolbar-side-icon>
-        <v-icon>school</v-icon>
+        <v-img :src="require('@/assets/icon.png')" width="24px" height="24px" contain/>
       </v-toolbar-side-icon>
       <v-toolbar-title class="headline text-uppercase">
         <span id="title">评教系统</span>
