@@ -42,6 +42,11 @@
 import EvaluationTitle from '@/components/EvaluationTitle'
 import EvaluationTasks from '@/components/EvaluationTasks'
 
+// TODO: [implement credential generation] Debugging. Remove on deployment
+// eslint-disable-next-line no-unused-vars
+import BigNumber from 'bignumber.js/bignumber.mjs'
+import SHA256 from 'crypto-js/sha256'
+
 export default {
   name: 'Contents',
   components: {
@@ -66,7 +71,18 @@ export default {
       currentStage: 1,
 
       currentAnswerList: Object,
-      answerSheet: []
+      answerSheet: [],
+
+      rnym: '',
+      rynmParams: {
+        gamma:
+          '76082481189518171659618347271359316061974334924246135550677426868159186269917',
+        g:
+          '14324589826880501450566120667645878869223081658493572976099532413757027896194',
+        rho:
+          '14952013069126470028876872236652170302350646862625615129237430316253689',
+        exp: '5088444'
+      }
     }
   },
   methods: {
@@ -171,6 +187,10 @@ export default {
      * * Submit answers to backend
      */
     submitAnswers() {
+      // TODO: implement credential generation
+      // eslint-disable-next-line no-unused-vars
+      let credentials = this.genCredentials()
+
       let currentCourseId = this.tasks[this.currentStage - 1].id
       let answer = {
         rnym: 'rnym',
@@ -191,6 +211,38 @@ export default {
 
     closeUncompletedWarning() {
       this.showUncompletedWarning = false
+    },
+
+    // TODO: implement credential generation
+    hash(val) {
+      return parseInt(SHA256(String(val)), 16) % 731499577
+    },
+
+    genRandom(digit) {
+      return Math.floor(Math.random() * Math.pow(2, digit))
+    },
+
+    /**
+     * genCredentials()
+     * * Generate credentials for backend to authenticate
+     */
+    genCredentials() {
+      let priv = {}
+      // eslint-disable-next-line no-unused-vars
+      let params = {}
+
+      // Generate randoms
+      let randAttr = ['s', 'e', 'w', 'z', 'x']
+      randAttr.forEach(i => {
+        priv['r' + i] = this.genRandom(32)
+      })
+
+      priv['w'] = this.genRandom(32)
+      priv['r'] = this.genRandom(32)
+      // eslint-disable-next-line no-console
+      console.log(priv)
+
+      // Calculate C sets
     }
   }
 }
