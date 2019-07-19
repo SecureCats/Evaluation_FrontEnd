@@ -47,86 +47,18 @@ export default {
   data() {
     return {
       // Fetch task list first, then initialize `Contents.vue`
-      // TODO: [implement credential generation] Debugging. Change to `false` on deployment
-      initialized: true,
+      initialized: false,
 
       // Anonymous class number and semester
       studentInfo: {
         class: this.$route.params.class,
         semester: this.$route.params.semester
       },
-      // TODO: [implement credential generation] Debugging. Change to `tasks: []` on deployment
-      tasks: [
-        {
-          id: '2018-2019-2-019',
-          title: '汇编语言与接口',
-          status: 0,
-          questions: [
-            {
-              id: 1,
-              description: '老师对教学科目的知识掌握如何？',
-              options: [
-                {
-                  id: 'A',
-                  description: '老师自己本身也没有很好的掌握所教科目的知识'
-                },
-                {
-                  id: 'B',
-                  description:
-                    '老师基本可以讲清楚所教课程的内容，但是面对一些提问不能做出很好的回答'
-                },
-                {
-                  id: 'C',
-                  description:
-                    '老师可以讲清楚所教课程的内容，并且能很好的回答同学的问题'
-                },
-                {
-                  id: 'D',
-                  description:
-                    '老师可以讲清楚所教课程的内容，并且能在课本内容之上对知识进行拓展'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          id: '2018-2019-2-021',
-          title: '汇编语言与接',
-          status: 0,
-          questions: [
-            {
-              id: 1,
-              description: '老师对教学科目的知识掌握如何？',
-              options: [
-                {
-                  id: 'A',
-                  description: '老师自己本身也没有很好的掌握所教科目的知识'
-                },
-                {
-                  id: 'B',
-                  description:
-                    '老师基本可以讲清楚所教课程的内容，但是面对一些提问不能做出很好的回答'
-                },
-                {
-                  id: 'C',
-                  description:
-                    '老师可以讲清楚所教课程的内容，并且能很好的回答同学的问题'
-                },
-                {
-                  id: 'D',
-                  description:
-                    '老师可以讲清楚所教课程的内容，并且能在课本内容之上对知识进行拓展'
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      tasks: []
     }
   },
   created() {
-    // TODO: [implement credential generation] Debugging. Uncomment on deployment
-    // this.fetchTaskList()
+    this.fetchTaskList()
   },
   methods: {
     /**
@@ -134,9 +66,9 @@ export default {
      * * Gets task list from backend on initialization
      */
     fetchTaskList() {
-      let baseApiUrl = '/api/v1/'
+      let api = '/api/v1/init'
       this.$http
-        .get(baseApiUrl + 'init', {
+        .get(api, {
           params: {
             classno: this.$route.params.class,
             semester: this.$route.params.semester
