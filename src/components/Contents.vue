@@ -42,6 +42,7 @@
 import EvaluationTitle from '@/components/EvaluationTitle'
 import EvaluationTasks from '@/components/EvaluationTasks'
 
+import Cookies from 'js-cookie'
 import SHA256 from 'crypto-js/sha256'
 const BigInteger = require('jsbn').BigInteger
 
@@ -71,7 +72,6 @@ export default {
       currentAnswerList: Object,
       answerSheet: [],
 
-      rnym: '',
       rynmParams: {
         gamma:
           '76082481189518171659618347271359316061974334924246135550677426868159186269917',
@@ -167,10 +167,15 @@ export default {
         let rnym = credentials['rnym']
         let currentCourseId = this.tasks[this.currentStage - 1].id
 
+        let csrftoken = Cookies.get('csrftoken');
+
         let api = '/api/v1/auth'
         this.$http({
           method: 'post',
           url: api,
+          headers: {
+            'X-CSRFToken': csrftoken
+          },
           params: {
             course_no: currentCourseId,
             classno: this.studentInfo.class
@@ -182,24 +187,32 @@ export default {
           // eslint-disable-next-line no-console
           console.log('Auth resp: ', resp.data)
 
-          // * Submit results
-          this.submitAnswers(rnym)
-            .then(() => {
-              this.tasks[this.currentStage - 1].status = 1
-              this.currentStage = this.currentStage + 1
+          if (resp.data.status === 'accepted') {
+            // * Submit results
+            this.submitAnswers(rnym)
+              .then(() => {
+                this.tasks[this.currentStage - 1].status = 1
+                this.currentStage = this.currentStage + 1
 
-              this.loading = false
-              // Back to top
-              this.$vuetify.goTo(0)
-            })
-            .catch(err => {
-              // eslint-disable-next-line no-console
-              console.log('Submit answers failed: ', err)
-              this.loading = false
-            })
+                this.loading = false
+                // Back to top
+                this.$vuetify.goTo(0)
+              })
+              .catch(err => {
+                // eslint-disable-next-line no-console
+                console.log('Submit answers failed: ', err)
+                this.loading = false
+              })
+          } else {
+            // TODO: implement auth failed 403 reroute
+            // eslint-disable-next-line no-console
+            console.log('Authentication failed.')
+            this.loading = false
+          }
         }).catch(err => {
+          // TODO: implement auth failed 403 reroute
           // eslint-disable-next-line no-console
-          console.log('Auth failed: ', err)
+          console.log('Auth error: ', err)
           this.loading = false
         })
       }
@@ -250,22 +263,31 @@ export default {
           // eslint-disable-next-line no-console
           console.log('Auth resp: ', resp.data)
 
-          // * Submit results
-          this.submitAnswers(rnym)
-            .then(() => {
-              this.tasks[this.currentStage - 1].status = 1
+          if (resp.data.status === 'accepted') {
+            // * Submit results
+            this.submitAnswers(rnym)
+              .then(() => {
+                this.tasks[this.currentStage - 1].status = 1
 
-              this.loading = false
-              this.$router.push({ path: '/success' })
-            })
-            .catch(err => {
-              // eslint-disable-next-line no-console
-              console.log('Submit answers failed: ', err)
-              this.loading = false
-            })
+                this.loading = false
+                this.$router.push({ path: '/success' })
+              })
+              .catch(err => {
+                // TODO: implement submit failed
+                // eslint-disable-next-line no-console
+                console.log('Submit answers failed: ', err)
+                this.loading = false
+              })
+          } else {
+            // TODO: implement auth failed 403 reroute
+            // eslint-disable-next-line no-console
+            console.log('Authentication failed')
+            this.loading = false
+          }
         }).catch(err => {
+          // TODO: implement auth failed 403 reroute
           // eslint-disable-next-line no-console
-          console.log('Auth failed: ', err)
+          console.log('Auth error: ', err)
           this.loading = false
         })
       }
@@ -277,12 +299,16 @@ export default {
      */
     submitAnswers(rnym) {
       let currentCourseId = this.tasks[this.currentStage - 1].id
+      let csrftoken = Cookies.get('csrftoken');
 
       // TODO: POST data to backend
       let api = '/api/v1/result'
       return this.$http({
         method: 'post',
         url: api,
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
         params: {
           course_no: currentCourseId,
           classno: this.studentInfo.class
