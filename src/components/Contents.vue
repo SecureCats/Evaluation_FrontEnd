@@ -130,6 +130,15 @@ export default {
     },
 
     /**
+     * answerCollector(answerList)
+     * * Collect answers from component `EvaluationTasks.vue`
+     * @param answerList
+     */
+    answerCollector(answerList) {
+      this.currentAnswerList = answerList
+    },
+
+    /**
      * nextTaskOnClick()
      * * Show snackbar and double confirmation button
      */
@@ -167,7 +176,7 @@ export default {
         let rnym = credentials['rnym']
         let currentCourseId = this.tasks[this.currentStage - 1].id
 
-        let csrftoken = Cookies.get('csrftoken');
+        let csrftoken = Cookies.get('csrftoken')
 
         let api = '/api/v1/auth'
         this.$http({
@@ -183,48 +192,41 @@ export default {
           data: {
             credentials: credentials
           }
-        }).then(resp => {
-          // eslint-disable-next-line no-console
-          console.log('Auth resp: ', resp.data)
+        })
+          .then(resp => {
+            // eslint-disable-next-line no-console
+            console.log('Auth resp: ', resp.data)
 
-          if (resp.data.status === 'accepted') {
-            // * Submit results
-            this.submitAnswers(rnym)
-              .then(() => {
-                this.tasks[this.currentStage - 1].status = 1
-                this.currentStage = this.currentStage + 1
+            if (resp.data.status === 'accepted') {
+              // * Submit results
+              this.submitAnswers(rnym)
+                .then(() => {
+                  this.tasks[this.currentStage - 1].status = 1
+                  this.currentStage = this.currentStage + 1
 
-                this.loading = false
-                // Back to top
-                this.$vuetify.goTo(0)
-              })
-              .catch(err => {
-                // eslint-disable-next-line no-console
-                console.log('Submit answers failed: ', err)
-                this.loading = false
-              })
-          } else {
+                  this.loading = false
+                  // Back to top
+                  this.$vuetify.goTo(0)
+                })
+                .catch(err => {
+                  // eslint-disable-next-line no-console
+                  console.log('Submit answers failed: ', err)
+                  this.loading = false
+                })
+            } else {
+              // TODO: implement auth failed 403 reroute
+              // eslint-disable-next-line no-console
+              console.log('Authentication failed.')
+              this.loading = false
+            }
+          })
+          .catch(err => {
             // TODO: implement auth failed 403 reroute
             // eslint-disable-next-line no-console
-            console.log('Authentication failed.')
+            console.log('Auth error: ', err)
             this.loading = false
-          }
-        }).catch(err => {
-          // TODO: implement auth failed 403 reroute
-          // eslint-disable-next-line no-console
-          console.log('Auth error: ', err)
-          this.loading = false
-        })
+          })
       }
-    },
-
-    /**
-     * answerCollector(answerList)
-     * * Collect answers from component `EvaluationTasks.vue`
-     * @param answerList
-     */
-    answerCollector(answerList) {
-      this.currentAnswerList = answerList
     },
 
     /**
@@ -259,37 +261,39 @@ export default {
           data: {
             credentials: credentials
           }
-        }).then(resp => {
-          // eslint-disable-next-line no-console
-          console.log('Auth resp: ', resp.data)
+        })
+          .then(resp => {
+            // eslint-disable-next-line no-console
+            console.log('Auth resp: ', resp.data)
 
-          if (resp.data.status === 'accepted') {
-            // * Submit results
-            this.submitAnswers(rnym)
-              .then(() => {
-                this.tasks[this.currentStage - 1].status = 1
+            if (resp.data.status === 'accepted') {
+              // * Submit results
+              this.submitAnswers(rnym)
+                .then(() => {
+                  this.tasks[this.currentStage - 1].status = 1
 
-                this.loading = false
-                this.$router.push({ path: '/success' })
-              })
-              .catch(err => {
-                // TODO: implement submit failed
-                // eslint-disable-next-line no-console
-                console.log('Submit answers failed: ', err)
-                this.loading = false
-              })
-          } else {
+                  this.loading = false
+                  this.$router.push({ path: '/success' })
+                })
+                .catch(err => {
+                  // TODO: implement submit failed
+                  // eslint-disable-next-line no-console
+                  console.log('Submit answers failed: ', err)
+                  this.loading = false
+                })
+            } else {
+              // TODO: implement auth failed 403 reroute
+              // eslint-disable-next-line no-console
+              console.log('Authentication failed')
+              this.loading = false
+            }
+          })
+          .catch(err => {
             // TODO: implement auth failed 403 reroute
             // eslint-disable-next-line no-console
-            console.log('Authentication failed')
+            console.log('Auth error: ', err)
             this.loading = false
-          }
-        }).catch(err => {
-          // TODO: implement auth failed 403 reroute
-          // eslint-disable-next-line no-console
-          console.log('Auth error: ', err)
-          this.loading = false
-        })
+          })
       }
     },
 
@@ -299,7 +303,7 @@ export default {
      */
     submitAnswers(rnym) {
       let currentCourseId = this.tasks[this.currentStage - 1].id
-      let csrftoken = Cookies.get('csrftoken');
+      let csrftoken = Cookies.get('csrftoken')
 
       // TODO: POST data to backend
       let api = '/api/v1/result'
@@ -368,50 +372,263 @@ export default {
 
         priv['w'] = this.genRandom(32)
         priv['r'] = this.genRandom(32)
-        priv['r_'] = new BigInteger(priv['rz']).subtract(new BigInteger(e).multiply(new BigInteger(priv['rw'])))
+        priv['r_'] = new BigInteger(priv['rz']).subtract(
+          new BigInteger(e).multiply(new BigInteger(priv['rw']))
+        )
         // eslint-disable-next-line no-console
         console.log(priv)
 
         // Calculate C sets
-        let grnym = new BigInteger(this.hash(this.tasks[this.currentStage - 1].id).toString()).modPow(new BigInteger(this.rynmParams.exp), new BigInteger(this.rynmParams.gamma))
+        let grnym = new BigInteger(
+          this.hash(this.tasks[this.currentStage - 1].id).toString()
+        ).modPow(
+          new BigInteger(this.rynmParams.exp),
+          new BigInteger(this.rynmParams.gamma)
+        )
 
-        params['Cs'] = new BigInteger(g).modPow(new BigInteger(s), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['rs']),new BigInteger(n))).mod(new BigInteger(n))
-        params['Ce'] = new BigInteger(g).modPow(new BigInteger(e), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['re']), new BigInteger(n))).mod(new BigInteger(n))
-        params['Cv'] = new BigInteger(v).multiply(new BigInteger(g).modPow(new BigInteger(priv['w']), new BigInteger(n))).mod(new BigInteger(n))
-        params['Cw'] = new BigInteger(g).modPow(new BigInteger(priv['w']), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['rw']), new BigInteger(n))).mod(new BigInteger(n))
+        params['Cs'] = new BigInteger(g)
+          .modPow(new BigInteger(s), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['rs']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['Ce'] = new BigInteger(g)
+          .modPow(new BigInteger(e), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['re']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['Cv'] = new BigInteger(v)
+          .multiply(
+            new BigInteger(g).modPow(
+              new BigInteger(priv['w']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['Cw'] = new BigInteger(g)
+          .modPow(new BigInteger(priv['w']), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['rw']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
         priv['z'] = new BigInteger(e).multiply(new BigInteger(priv['w']))
-        params['C'] = params['Cv'].modPow(new BigInteger(e), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['r']), new BigInteger(n))).mod(new BigInteger(n))
-        params['Cx'] = new BigInteger(g).modPow(new BigInteger(uk), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['rx']), new BigInteger(n))).mod(new BigInteger(n))
-        params['Cz'] = new BigInteger(g).modPow(new BigInteger(priv['z']), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['rz']), new BigInteger(n))).mod(new BigInteger(n))
+        params['C'] = params['Cv']
+          .modPow(new BigInteger(e), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['r']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['Cx'] = new BigInteger(g)
+          .modPow(new BigInteger(uk), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['rx']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['Cz'] = new BigInteger(g)
+          .modPow(new BigInteger(priv['z']), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['rz']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
 
         // Calculate Y sets
-        params['y1'] = params['Cv'].modPow(new BigInteger(priv['r1']), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['r2']), new BigInteger(n))).mod(new BigInteger(n))
-        params['y2'] = new BigInteger(g).modPow(new BigInteger(priv['r1']), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['r3']), new BigInteger(n))).mod(new BigInteger(n))
-        params['y3'] = new BigInteger(a).modPow(new BigInteger(priv['r4']), new BigInteger(n)).multiply(new BigInteger(b).modPow(new BigInteger(priv['r5']), new BigInteger(n))).multiply(new BigInteger(g).modPow(new BigInteger(priv['r6']), new BigInteger(n))).multiply(new BigInteger(h).modPow(new BigInteger(priv['r7']), new BigInteger(n))).mod(new BigInteger(n))
-        params['y4'] = new BigInteger(g).modPow(new BigInteger(priv['r4']), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['r8']), new BigInteger(n))).mod(new BigInteger(n))
-        params['y5'] = new BigInteger(g).modPow(new BigInteger(priv['r5']), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['r9']), new BigInteger(n))).mod(new BigInteger(n))
-        params['y6'] = new BigInteger(g).modPow(new BigInteger(priv['r10']), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['r11']), new BigInteger(n))).mod(new BigInteger(n))
-        params['y7'] = new BigInteger(g).modPow(new BigInteger(priv['r6']), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['r12']), new BigInteger(n))).mod(new BigInteger(n))
-        params['y8'] = params['Cv'].modPow(new BigInteger(priv['r10']), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['r7']), new BigInteger(n))).mod(new BigInteger(n))
-        params['y9'] = new BigInteger(g).modPow(new BigInteger(priv['r13']), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['r14']), new BigInteger(n))).mod(new BigInteger(n))
-        params['y10'] = new BigInteger(g).modPow(new BigInteger(priv['r15']), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['r16']), new BigInteger(n))).mod(new BigInteger(n))
-        params['y11'] = new BigInteger(g).modPow(new BigInteger(priv['r17']), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['r18']), new BigInteger(n))).mod(new BigInteger(n))
-        params['y12'] = params['Cw'].modPow(new BigInteger(priv['r17']), new BigInteger(n)).multiply(new BigInteger(h).modPow(new BigInteger(priv['r19']), new BigInteger(n))).mod(new BigInteger(n))
-        params['y13'] = grnym.modPow(new BigInteger(priv['r4']), new BigInteger(n))
+        params['y1'] = params['Cv']
+          .modPow(new BigInteger(priv['r1']), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['r2']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['y2'] = new BigInteger(g)
+          .modPow(new BigInteger(priv['r1']), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['r3']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['y3'] = new BigInteger(a)
+          .modPow(new BigInteger(priv['r4']), new BigInteger(n))
+          .multiply(
+            new BigInteger(b).modPow(
+              new BigInteger(priv['r5']),
+              new BigInteger(n)
+            )
+          )
+          .multiply(
+            new BigInteger(g).modPow(
+              new BigInteger(priv['r6']),
+              new BigInteger(n)
+            )
+          )
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['r7']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['y4'] = new BigInteger(g)
+          .modPow(new BigInteger(priv['r4']), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['r8']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['y5'] = new BigInteger(g)
+          .modPow(new BigInteger(priv['r5']), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['r9']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['y6'] = new BigInteger(g)
+          .modPow(new BigInteger(priv['r10']), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['r11']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['y7'] = new BigInteger(g)
+          .modPow(new BigInteger(priv['r6']), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['r12']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['y8'] = params['Cv']
+          .modPow(new BigInteger(priv['r10']), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['r7']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['y9'] = new BigInteger(g)
+          .modPow(new BigInteger(priv['r13']), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['r14']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['y10'] = new BigInteger(g)
+          .modPow(new BigInteger(priv['r15']), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['r16']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['y11'] = new BigInteger(g)
+          .modPow(new BigInteger(priv['r17']), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['r18']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['y12'] = params['Cw']
+          .modPow(new BigInteger(priv['r17']), new BigInteger(n))
+          .multiply(
+            new BigInteger(h).modPow(
+              new BigInteger(priv['r19']),
+              new BigInteger(n)
+            )
+          )
+          .mod(new BigInteger(n))
+        params['y13'] = grnym.modPow(
+          new BigInteger(priv['r4']),
+          new BigInteger(n)
+        )
 
         // Calculate x sets
-        params['x'] = this.hash(new BigInteger(g).multiply(new BigInteger(h)).multiply(params['C']).multiply(params['Cv']).multiply(params['Cs']).multiply(params['Ce']).multiply(params['Cx']).multiply(params['Cz']).multiply(params['Cw']).toString())
+        params['x'] = this.hash(
+          new BigInteger(g)
+            .multiply(new BigInteger(h))
+            .multiply(params['C'])
+            .multiply(params['Cv'])
+            .multiply(params['Cs'])
+            .multiply(params['Ce'])
+            .multiply(params['Cx'])
+            .multiply(params['Cz'])
+            .multiply(params['Cw'])
+            .toString()
+        )
 
         // Calculate z sets
         let i = 0
-        let arr = [e, priv['r'], priv['re'], uk, s, priv['z'], priv['r'], priv['rx'], priv['rs'], e, priv['re'], priv['rz'], priv['z'], priv['rz'], priv['w'], priv['rw'], e, priv['re'], priv['r_']]
+        let arr = [
+          e,
+          priv['r'],
+          priv['re'],
+          uk,
+          s,
+          priv['z'],
+          priv['r'],
+          priv['rx'],
+          priv['rs'],
+          e,
+          priv['re'],
+          priv['rz'],
+          priv['z'],
+          priv['rz'],
+          priv['w'],
+          priv['rw'],
+          e,
+          priv['re'],
+          priv['r_']
+        ]
         arr.forEach(j => {
           i = i + 1
-          params['z' + i.toString()] = new BigInteger(priv['r' + i.toString()].toString()).add(new BigInteger(params['x'].toString()).multiply(new BigInteger(j.toString())))
+          params['z' + i.toString()] = new BigInteger(
+            priv['r' + i.toString()].toString()
+          ).add(
+            new BigInteger(params['x'].toString()).multiply(
+              new BigInteger(j.toString())
+            )
+          )
         })
 
         // Calculate rnym
-        params['rnym'] = grnym.modPow(new BigInteger(uk), new BigInteger(this.rynmParams.gamma))
+        params['rnym'] = grnym.modPow(
+          new BigInteger(uk),
+          new BigInteger(this.rynmParams.gamma)
+        )
 
         for (let key in params) {
           credentials[key] = params[key].toString()
