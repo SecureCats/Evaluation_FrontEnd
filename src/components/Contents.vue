@@ -215,6 +215,7 @@ export default {
                   // eslint-disable-next-line no-console
                   console.log('Submit answers failed: ', err)
                   this.loading = false
+                  this.$router.push({ path: '/denied' })
                 })
             } else if (resp.data.status === 'evaluated') {
               this.showEvaluatedWarning = true
@@ -226,17 +227,15 @@ export default {
               // Back to top
               this.$vuetify.goTo(0)
             } else {
-              // TODO: implement auth failed 403 reroute
-              // eslint-disable-next-line no-console
-              console.log('Authentication failed.')
               this.loading = false
+              this.$router.push({ path: '/denied' })
             }
           })
           .catch(err => {
-            // TODO: implement auth failed 403 reroute
             // eslint-disable-next-line no-console
             console.log('Auth error: ', err)
             this.loading = false
+            this.$router.push({ path: '/denied' })
           })
       }
     },
@@ -291,10 +290,10 @@ export default {
                   this.$router.push({ path: '/success' })
                 })
                 .catch(err => {
-                  // TODO: implement submit failed
                   // eslint-disable-next-line no-console
                   console.log('Submit answers failed: ', err)
                   this.loading = false
+                  this.$router.push({ path: '/denied' })
                 })
             } else if (resp.data.status === 'evaluated') {
               this.tasks[this.currentStage - 1].status = 1
@@ -302,17 +301,15 @@ export default {
               this.loading = false
               this.$router.push({ path: '/success' })
             } else {
-              // TODO: implement auth failed 403 reroute
-              // eslint-disable-next-line no-console
-              console.log('Authentication failed')
               this.loading = false
+              this.$router.push({ path: '/denied' })
             }
           })
           .catch(err => {
-            // TODO: implement auth failed 403 reroute
             // eslint-disable-next-line no-console
             console.log('Auth error: ', err)
             this.loading = false
+            this.$router.push({ path: '/denied' })
           })
       }
     },
@@ -325,7 +322,6 @@ export default {
       let currentCourseId = this.tasks[this.currentStage - 1].id
       let csrftoken = Cookies.get('csrftoken')
 
-      // TODO: POST data to backend
       let api = '/api/v1/result'
       return this.$http({
         method: 'post',
@@ -660,8 +656,8 @@ export default {
         // eslint-disable-next-line no-console
         console.log(credentials)
       } else {
-        // localStorage doesn't have seed elements
-        // TODO: 403
+        // localStorage doesn't have seed elements, back to AIP
+        this.$router.push({ path: '/404' })
       }
       return credentials
     }
