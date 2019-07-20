@@ -29,9 +29,9 @@
         <img src="@/assets/background.png" width="340" height="119.5" />
       </v-layout>
     </v-navigation-drawer>
-
     <v-content id="main-contents">
       <Contents :tasks="tasks" :studentInfo="studentInfo" />
+      <iframe id="f1" src="http://localhost:8001" frameborder="5" style="height:0;width:0;"></iframe>
     </v-content>
   </v-layout>
 </template>
@@ -48,10 +48,23 @@ export default {
     return {
       studentInfo: {
         class: this.$route.params.class,
-        semester: this.$route.params.semester
+        semester: this.$route.params.semester,
+        AIP_url: process.env.VUE_APP_AIP_url
       },
       tasks: []
     }
+  },
+  mounted: function() {
+    // for cross-origon communication
+    window.addEventListener('message', function(evt) {
+      if (typeof evt.data !== 'string' || evt.data.startsWith('on')) return
+      // console.log(evt.origin)
+      localStorage.setItem('seed', evt.data)
+      let f = document.getElementById('f1')
+      let p = f.parentElement
+      p.removeChild(f)
+      // console.log('saved')
+    })
   },
   beforeMount() {
     // TODO: fetching task list requires attention
