@@ -49,8 +49,7 @@ import EvaluationTitle from '@/components/EvaluationTitle'
 import EvaluationTasks from '@/components/EvaluationTasks'
 
 import Cookies from 'js-cookie'
-import SHA256 from 'crypto-js/sha256'
-const BigInteger = require('jsbn').BigInteger
+import worker from 'workerize-loader!./../credentials'
 
 export default {
   name: 'Contents',
@@ -77,7 +76,6 @@ export default {
       currentStage: 1,
 
       currentAnswerList: Object,
-      answerSheet: [],
 
       rynmParams: {
         gamma:
@@ -178,64 +176,71 @@ export default {
         this.loading = true
 
         // * Authenticate user
-        let credentials = this.genCredentials()
-        let rnym = credentials['rnym']
-        let currentCourseId = this.tasks[this.currentStage - 1].id
+        this.genCredentials()
+          .then(credentials => {
+            let rnym = credentials['rnym']
+            let currentCourseId = this.tasks[this.currentStage - 1].id
 
-        let csrftoken = Cookies.get('csrftoken')
+            let csrftoken = Cookies.get('csrftoken')
 
-        let api = '/api/v1/auth'
-        this.$http({
-          method: 'post',
-          url: api,
-          headers: {
-            'X-CSRFToken': csrftoken
-          },
-          params: {
-            course_no: currentCourseId,
-            classno: this.studentInfo.class
-          },
-          data: {
-            credentials: credentials
-          }
-        })
-          .then(resp => {
-            if (resp.data.status === 'accept') {
-              // * Submit results
-              this.submitAnswers(rnym)
-                .then(() => {
+            let api = '/api/v1/auth'
+            this.$http({
+              method: 'post',
+              url: api,
+              headers: {
+                'X-CSRFToken': csrftoken
+              },
+              params: {
+                course_no: currentCourseId,
+                classno: this.studentInfo.class
+              },
+              data: {
+                credentials: credentials
+              }
+            })
+              .then(resp => {
+                if (resp.data.status === 'accept') {
+                  // * Submit results
+                  this.submitAnswers(rnym)
+                    .then(() => {
+                      this.tasks[this.currentStage - 1].status = 1
+                      this.currentStage = this.currentStage + 1
+
+                      this.loading = false
+                      // Back to top
+                      this.$vuetify.goTo(0)
+                    })
+                    .catch(err => {
+                      // eslint-disable-next-line no-console
+                      console.log('Submit answers failed: ', err)
+                      this.loading = false
+                      this.$router.push({ path: '/denied' })
+                    })
+                } else if (resp.data.status === 'evaluated') {
+                  this.showEvaluatedWarning = true
+                  // Proceed to next stage directly
                   this.tasks[this.currentStage - 1].status = 1
                   this.currentStage = this.currentStage + 1
 
                   this.loading = false
                   // Back to top
                   this.$vuetify.goTo(0)
-                })
-                .catch(err => {
-                  // eslint-disable-next-line no-console
-                  console.log('Submit answers failed: ', err)
+                } else {
                   this.loading = false
                   this.$router.push({ path: '/denied' })
-                })
-            } else if (resp.data.status === 'evaluated') {
-              this.showEvaluatedWarning = true
-              // Proceed to next stage directly
-              this.tasks[this.currentStage - 1].status = 1
-              this.currentStage = this.currentStage + 1
-
-              this.loading = false
-              // Back to top
-              this.$vuetify.goTo(0)
-            } else {
-              this.loading = false
-              this.$router.push({ path: '/denied' })
-            }
+                }
+              })
+              .catch(err => {
+                // eslint-disable-next-line no-console
+                console.log('Auth error: ', err)
+                this.loading = false
+                this.$router.push({ path: '/denied' })
+              })
           })
           .catch(err => {
             // eslint-disable-next-line no-console
-            console.log('Auth error: ', err)
+            console.log('Credential generation failed: ', err)
             this.loading = false
-            this.$router.push({ path: '/denied' })
           })
       }
     },
@@ -256,61 +261,62 @@ export default {
         this.loading = true
 
         // * Authenticate user
-        let credentials = this.genCredentials()
-        let rnym = credentials['rnym']
-        let currentCourseId = this.tasks[this.currentStage - 1].id
-        let csrftoken = Cookies.get('csrftoken')
+        this.genCredentials().then(credentials => {
+          let rnym = credentials['rnym']
+          let currentCourseId = this.tasks[this.currentStage - 1].id
+          let csrftoken = Cookies.get('csrftoken')
 
-        let api = '/api/v1/auth'
-        this.$http({
-          method: 'post',
-          url: api,
-          headers: {
-            'X-CSRFToken': csrftoken
-          },
-          params: {
-            course_no: currentCourseId,
-            classno: this.studentInfo.class
-          },
-          data: {
-            credentials: credentials
-          }
-        })
-          .then(resp => {
-            // eslint-disable-next-line no-console
-            console.log('Auth resp: ', resp.data)
-
-            if (resp.data.status === 'accept') {
-              // * Submit results
-              this.submitAnswers(rnym)
-                .then(() => {
-                  this.tasks[this.currentStage - 1].status = 1
-
-                  this.loading = false
-                  this.$router.push({ path: '/success' })
-                })
-                .catch(err => {
-                  // eslint-disable-next-line no-console
-                  console.log('Submit answers failed: ', err)
-                  this.loading = false
-                  this.$router.push({ path: '/denied' })
-                })
-            } else if (resp.data.status === 'evaluated') {
-              this.tasks[this.currentStage - 1].status = 1
-
-              this.loading = false
-              this.$router.push({ path: '/success' })
-            } else {
-              this.loading = false
-              this.$router.push({ path: '/denied' })
+          let api = '/api/v1/auth'
+          this.$http({
+            method: 'post',
+            url: api,
+            headers: {
+              'X-CSRFToken': csrftoken
+            },
+            params: {
+              course_no: currentCourseId,
+              classno: this.studentInfo.class
+            },
+            data: {
+              credentials: credentials
             }
           })
-          .catch(err => {
-            // eslint-disable-next-line no-console
-            console.log('Auth error: ', err)
-            this.loading = false
-            this.$router.push({ path: '/denied' })
-          })
+            .then(resp => {
+              // eslint-disable-next-line no-console
+              console.log('Auth resp: ', resp.data)
+
+              if (resp.data.status === 'accept') {
+                // * Submit results
+                this.submitAnswers(rnym)
+                  .then(() => {
+                    this.tasks[this.currentStage - 1].status = 1
+
+                    this.loading = false
+                    this.$router.push({ path: '/success' })
+                  })
+                  .catch(err => {
+                    // eslint-disable-next-line no-console
+                    console.log('Submit answers failed: ', err)
+                    this.loading = false
+                    this.$router.push({ path: '/denied' })
+                  })
+              } else if (resp.data.status === 'evaluated') {
+                this.tasks[this.currentStage - 1].status = 1
+
+                this.loading = false
+                this.$router.push({ path: '/success' })
+              } else {
+                this.loading = false
+                this.$router.push({ path: '/denied' })
+              }
+            })
+            .catch(err => {
+              // eslint-disable-next-line no-console
+              console.log('Auth error: ', err)
+              this.loading = false
+              this.$router.push({ path: '/denied' })
+            })
+        })
       }
     },
 
@@ -347,319 +353,18 @@ export default {
       this.showEvaluatedWarning = false
     },
 
-    // * Credential generation algorithm
-    hash(val) {
-      return new BigInteger(SHA256(val.toString()).toString(), 16).mod(
-        new BigInteger('731499577')
-      )
-    },
-
-    genRandom(digit) {
-      return Math.floor(Math.random() * Math.pow(2, digit)).toString()
-    },
-
     /**
      * genCredentials()
      * * Generate credentials for backend to authenticate
      */
     genCredentials() {
-      let credentials = {}
       // Get seed from localStorage
-      if (localStorage.seed) {
-        let seed = JSON.parse(localStorage.seed)
+      let seed = localStorage.seed
+      let currentCourseId = this.tasks[this.currentStage - 1].id
+      let rynmParams = this.rynmParams
 
-        let s = seed.signature.s
-        let e = seed.signature.e
-        let v = seed.signature.v
-        let uk = seed.uk
-        let a = seed.pubkey.a
-        let b = seed.pubkey.b
-        let g = seed.pubkey.g
-        let h = seed.pubkey.h
-        let n = seed.pubkey.n
-        // Private random variables
-        let priv = {}
-        // Credential parameters
-        let params = {}
-
-        // Generate randoms
-        let randAttr = ['s', 'e', 'w', 'z', 'x']
-        randAttr.forEach(i => {
-          priv['r' + i] = this.genRandom(32)
-        })
-        for (let i = 0; i < 20; i++) {
-          priv['r' + i.toString()] = this.genRandom(32)
-        }
-
-        priv['w'] = this.genRandom(32)
-        priv['r'] = this.genRandom(32)
-        priv['r_'] = new BigInteger(priv['rz']).subtract(
-          new BigInteger(e).multiply(new BigInteger(priv['rw']))
-        )
-        // eslint-disable-next-line no-console
-        console.log(priv)
-
-        let currentCourseId = this.tasks[this.currentStage - 1].id
-
-        // Calculate C sets
-        let grnym = this.hash(currentCourseId).modPow(
-          new BigInteger(this.rynmParams.exp),
-          new BigInteger(this.rynmParams.gamma)
-        )
-
-        params['Cs'] = new BigInteger(g)
-          .modPow(new BigInteger(s), new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['rs']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['Ce'] = new BigInteger(g)
-          .modPow(new BigInteger(e), new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['re']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['Cv'] = new BigInteger(v)
-          .multiply(
-            new BigInteger(g).modPow(
-              new BigInteger(priv['w']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['Cw'] = new BigInteger(g)
-          .modPow(new BigInteger(priv['w']), new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['rw']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        priv['z'] = new BigInteger(e).multiply(new BigInteger(priv['w']))
-        params['C'] = params['Cv']
-          .modPow(new BigInteger(e), new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['r']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['Cx'] = new BigInteger(g)
-          .modPow(new BigInteger(uk), new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['rx']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['Cz'] = new BigInteger(g)
-          .modPow(priv['z'], new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['rz']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-
-        // Calculate Y sets
-        params['y1'] = params['Cv']
-          .modPow(new BigInteger(priv['r1']), new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['r2']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['y2'] = new BigInteger(g)
-          .modPow(new BigInteger(priv['r1']), new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['r3']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['y3'] = new BigInteger(a)
-          .modPow(new BigInteger(priv['r4']), new BigInteger(n))
-          .multiply(
-            new BigInteger(b).modPow(
-              new BigInteger(priv['r5']),
-              new BigInteger(n)
-            )
-          )
-          .multiply(
-            new BigInteger(g).modPow(
-              new BigInteger(priv['r6']),
-              new BigInteger(n)
-            )
-          )
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['r7']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['y4'] = new BigInteger(g)
-          .modPow(new BigInteger(priv['r4']), new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['r8']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['y5'] = new BigInteger(g)
-          .modPow(new BigInteger(priv['r5']), new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['r9']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['y6'] = new BigInteger(g)
-          .modPow(new BigInteger(priv['r10']), new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['r11']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['y7'] = new BigInteger(g)
-          .modPow(new BigInteger(priv['r6']), new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['r12']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['y8'] = params['Cv']
-          .modPow(new BigInteger(priv['r10']), new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['r7']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['y9'] = new BigInteger(g)
-          .modPow(new BigInteger(priv['r13']), new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['r14']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['y10'] = new BigInteger(g)
-          .modPow(new BigInteger(priv['r15']), new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['r16']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['y11'] = new BigInteger(g)
-          .modPow(new BigInteger(priv['r17']), new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['r18']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['y12'] = params['Cw']
-          .modPow(new BigInteger(priv['r17']), new BigInteger(n))
-          .multiply(
-            new BigInteger(h).modPow(
-              new BigInteger(priv['r19']),
-              new BigInteger(n)
-            )
-          )
-          .mod(new BigInteger(n))
-        params['y13'] = grnym.modPow(
-          new BigInteger(priv['r4']),
-          new BigInteger(this.rynmParams.gamma)
-        )
-
-        // Calculate x sets
-        params['x'] = this.hash(
-          new BigInteger(g)
-            .multiply(new BigInteger(h))
-            .multiply(params['C'])
-            .multiply(params['Cv'])
-            .multiply(params['Cs'])
-            .multiply(params['Ce'])
-            .multiply(params['Cx'])
-            .multiply(params['Cz'])
-            .multiply(params['Cw'])
-        )
-
-        // Calculate z sets
-        let i = 0
-        let arr = [
-          e,
-          priv['r'],
-          priv['re'],
-          uk,
-          s,
-          priv['z'],
-          priv['r'],
-          priv['rx'],
-          priv['rs'],
-          e,
-          priv['re'],
-          priv['rz'],
-          priv['z'],
-          priv['rz'],
-          priv['w'],
-          priv['rw'],
-          e,
-          priv['re'],
-          priv['r_']
-        ]
-        arr.forEach(j => {
-          i = i + 1
-          params['z' + i.toString()] = new BigInteger(
-            priv['r' + i.toString()].toString()
-          ).add(
-            new BigInteger(params['x'].toString()).multiply(
-              new BigInteger(j.toString())
-            )
-          )
-        })
-
-        // Calculate rnym
-        params['rnym'] = grnym.modPow(
-          new BigInteger(uk),
-          new BigInteger(this.rynmParams.gamma)
-        )
-
-        for (let key in params) {
-          credentials[key] = params[key].toString()
-        }
-        // eslint-disable-next-line no-console
-        console.log(credentials)
-      } else {
-        // localStorage doesn't have seed elements, back to AIP
-        this.$router.push({ path: '/404' })
-      }
-      return credentials
+      let credentialWorker = worker()
+      return credentialWorker.generate(seed, currentCourseId, rynmParams)
     }
   }
 }
