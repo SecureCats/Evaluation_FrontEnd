@@ -30,6 +30,12 @@
       <v-btn flat @click="closeUncompletedWarning">好的</v-btn>
     </v-snackbar>
 
+    <v-snackbar v-model="showEvaluatedWarning" top color="error">
+      <v-icon dark :size="20">error</v-icon>
+      <span id="snackbarInfo">本节课程你已评价，将直接进入下一部分评教任务。</span>
+      <v-btn flat @click="closeEvaluatedWarning">好的</v-btn>
+    </v-snackbar>
+
     <v-snackbar v-model="showCompletedAllSnackbar" top color="success">
       <v-progress-circular :size="20" v-model="countdownProgress"></v-progress-circular>
       <span id="snackbarInfo">全部评教任务已经完成，确认提交结果？</span>
@@ -61,6 +67,7 @@ export default {
       showNextTaskSnackbar: false,
       showCompletedAllSnackbar: false,
       showUncompletedWarning: false,
+      showEvaluatedWarning: false,
 
       loading: false,
 
@@ -193,9 +200,6 @@ export default {
           }
         })
           .then(resp => {
-            // eslint-disable-next-line no-console
-            console.log('Auth resp: ', resp.data)
-
             if (resp.data.status === 'accept') {
               // * Submit results
               this.submitAnswers(rnym)
@@ -212,6 +216,15 @@ export default {
                   console.log('Submit answers failed: ', err)
                   this.loading = false
                 })
+            } else if (resp.data.status === 'evaluated') {
+              this.showEvaluatedWarning = true
+              // Proceed to next stage directly
+              this.tasks[this.currentStage - 1].status = 1
+              this.currentStage = this.currentStage + 1
+
+              this.loading = false
+              // Back to top
+              this.$vuetify.goTo(0)
             } else {
               // TODO: implement auth failed 403 reroute
               // eslint-disable-next-line no-console
@@ -324,6 +337,9 @@ export default {
 
     closeUncompletedWarning() {
       this.showUncompletedWarning = false
+    },
+    closeEvaluatedWarning() {
+      this.showEvaluatedWarning = false
     },
 
     // * Credential generation algorithm
