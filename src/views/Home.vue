@@ -4,7 +4,7 @@
       <v-layout column fill-height>
         <v-toolbar flat color="transparent">
           <v-toolbar-side-icon>
-            <v-icon>school</v-icon>
+            <v-img :src="require('@/assets/icon.png')" width="24px" height="24px" contain/>
           </v-toolbar-side-icon>
           <v-toolbar-title class="headline text-uppercase">
             <span id="title">评教系统</span>
@@ -46,11 +46,14 @@ export default {
   },
   data() {
     return {
+      // Fetch task list first, then initialize `Contents.vue`
+      initialized: false,
+
+      // Anonymous class number and semester
       studentInfo: {
         class: this.$route.params.class,
         semester: this.$route.params.semester
       },
-      initialized: false,
       tasks: []
     }
   },
@@ -63,16 +66,18 @@ export default {
      * * Gets task list from backend on initialization
      */
     fetchTaskList() {
-      let baseApiUrl = '/api/v1/'
+      let api = '/api/v1/init'
       this.$http
-        .get(baseApiUrl + 'init', {
+        .get(api, {
           params: {
             classno: this.$route.params.class,
             semester: this.$route.params.semester
           }
         })
         .then(resp => {
+          // Tell `Contents.vue` to render
           this.initialized = true
+
           this.tasks = resp.data.tasks
         })
         .catch(() => {
