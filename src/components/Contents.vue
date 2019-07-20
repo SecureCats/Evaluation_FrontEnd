@@ -260,11 +260,15 @@ export default {
         let credentials = this.genCredentials()
         let rnym = credentials['rnym']
         let currentCourseId = this.tasks[this.currentStage - 1].id
+        let csrftoken = Cookies.get('csrftoken')
 
         let api = '/api/v1/auth'
         this.$http({
           method: 'post',
           url: api,
+          headers: {
+            'X-CSRFToken': csrftoken
+          },
           params: {
             course_no: currentCourseId,
             classno: this.studentInfo.class
@@ -292,6 +296,11 @@ export default {
                   console.log('Submit answers failed: ', err)
                   this.loading = false
                 })
+            } else if (resp.data.status === 'evaluated') {
+              this.tasks[this.currentStage - 1].status = 1
+
+              this.loading = false
+              this.$router.push({ path: '/success' })
             } else {
               // TODO: implement auth failed 403 reroute
               // eslint-disable-next-line no-console
