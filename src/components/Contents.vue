@@ -170,7 +170,6 @@ export default {
         // Set loading animations
         this.loading = true
 
-        // TODO: certify user credentials (in between stages)
         // * Authenticate user
         let credentials = this.genCredentials()
         let rnym = credentials['rnym']
@@ -197,7 +196,7 @@ export default {
             // eslint-disable-next-line no-console
             console.log('Auth resp: ', resp.data)
 
-            if (resp.data.status === 'accepted') {
+            if (resp.data.status === 'accept') {
               // * Submit results
               this.submitAnswers(rnym)
                 .then(() => {
@@ -244,7 +243,6 @@ export default {
       } else {
         this.loading = true
 
-        // TODO: certify user credentials (final stage)
         // * Authenticate user
         let credentials = this.genCredentials()
         let rnym = credentials['rnym']
@@ -266,7 +264,7 @@ export default {
             // eslint-disable-next-line no-console
             console.log('Auth resp: ', resp.data)
 
-            if (resp.data.status === 'accepted') {
+            if (resp.data.status === 'accept') {
               // * Submit results
               this.submitAnswers(rnym)
                 .then(() => {
@@ -328,7 +326,7 @@ export default {
       this.showUncompletedWarning = false
     },
 
-    // TODO: implement credential generation
+    // * Credential generation algorithm
     hash(val) {
       return new BigInteger(SHA256(val.toString()).toString(), 16).mod(
         new BigInteger('731499577')
@@ -443,7 +441,7 @@ export default {
           )
           .mod(new BigInteger(n))
         params['Cz'] = new BigInteger(g)
-          .modPow(new BigInteger(priv['z']), new BigInteger(n))
+          .modPow(priv['z'], new BigInteger(n))
           .multiply(
             new BigInteger(h).modPow(
               new BigInteger(priv['rz']),
@@ -638,7 +636,7 @@ export default {
         console.log(credentials)
       } else {
         // localStorage doesn't have seed elements
-        // TODO: 404
+        // TODO: 403
       }
       return credentials
     }
