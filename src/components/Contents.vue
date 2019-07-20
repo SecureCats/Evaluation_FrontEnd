@@ -363,6 +363,7 @@ export default {
       let currentCourseId = this.tasks[this.currentStage - 1].id
       let rynmParams = this.rynmParams
 
+      // Launch concurrent web worker threads to implement non-blocking calculations
       let credentialWorker = worker()
       return credentialWorker.generate(seed, currentCourseId, rynmParams)
     }

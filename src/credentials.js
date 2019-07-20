@@ -16,8 +16,7 @@ export function generate(seed, currentCourseId, rynmParams) {
   let credentials = {}
 
   seed = JSON.parse(seed)
-  // eslint-disable-next-line no-console
-  console.log('[WORKER]', seed)
+  // console.log('[WORKER]', seed)
 
   // Signatures: (s, e, v)
   let s = seed.signature.s
@@ -52,8 +51,7 @@ export function generate(seed, currentCourseId, rynmParams) {
   priv['r_'] = new BigInteger(priv['rz']).subtract(
     new BigInteger(e).multiply(new BigInteger(priv['rw']))
   )
-  // eslint-disable-next-line no-console
-  console.log('[WORKER]', priv)
+  // console.log('[WORKER]', priv)
 
   // Calculate C sets
   let grnym = hash(currentCourseId).modPow(
@@ -244,7 +242,6 @@ export function generate(seed, currentCourseId, rynmParams) {
   for (let key in params) {
     credentials[key] = params[key].toString()
   }
-  // eslint-disable-next-line no-console
-  console.log('[WORKER]', credentials)
+  // console.log('[WORKER]', credentials)
   return credentials
 }
