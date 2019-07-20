@@ -19,6 +19,11 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/Success.vue')
     },
     {
+      path: '/denied',
+      name: 'denied',
+      component: () => import(/* webpackChunkName: "about" */ './views/Denied.vue')
+    },
+    {
       path: '*',
       name: '404',
       // route level code-splitting

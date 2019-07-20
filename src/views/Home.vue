@@ -4,7 +4,7 @@
       <v-layout column fill-height>
         <v-toolbar flat color="transparent">
           <v-toolbar-side-icon>
-            <v-icon>school</v-icon>
+            <v-img :src="require('@/assets/icon.png')" width="24px" height="24px" contain/>
           </v-toolbar-side-icon>
           <v-toolbar-title class="headline text-uppercase">
             <span id="title">评教系统</span>
@@ -29,7 +29,8 @@
         <img src="@/assets/background.png" width="340" height="119.5" />
       </v-layout>
     </v-navigation-drawer>
-    <v-content id="main-contents">
+
+    <v-content id="main-contents" v-if="initialized">
       <Contents :tasks="tasks" :studentInfo="studentInfo" />
       <iframe id="f1" src="http://localhost:8001" frameborder="5" style="height:0;width:0;"></iframe>
     </v-content>
@@ -46,6 +47,10 @@ export default {
   },
   data() {
     return {
+      // Fetch task list first, then initialize `Contents.vue`
+      initialized: false,
+
+      // Anonymous class number and semester
       studentInfo: {
         class: this.$route.params.class,
         semester: this.$route.params.semester,
@@ -54,6 +59,7 @@ export default {
       tasks: []
     }
   },
+<<<<<<< HEAD
   mounted: function() {
     // for cross-origon communication
     window.addEventListener('message', function(evt) {
@@ -323,26 +329,34 @@ export default {
         ]
       }
     ]
+=======
+  created() {
+    this.fetchTaskList()
+>>>>>>> 2c86a669c139cf840faad5a6b88412cdb166f7d3
   },
   methods: {
     /**
      * fetchTaskList()
      * * Gets task list from backend on initialization
-     * TODO: Requires CORS?
      */
     fetchTaskList() {
-      let baseApiUrl = 'localhost:8000/api/v1/'
+      let api = '/api/v1/init'
       this.$http
-        .get(baseApiUrl + 'init', {
+        .get(api, {
           params: {
-            classno: this.class,
-            semester: this.semester
+            classno: this.$route.params.class,
+            semester: this.$route.params.semester
           }
         })
         .then(resp => {
-          // eslint-disable-next-line no-console
-          console.log(resp.data)
-          this.tasks = resp.data
+          // Tell `Contents.vue` to render
+          this.initialized = true
+
+          this.tasks = resp.data.tasks
+        })
+        .catch(() => {
+          // Class number and/or semester key invalid
+          this.$router.push({ path: '/404' })
         })
     }
   }
