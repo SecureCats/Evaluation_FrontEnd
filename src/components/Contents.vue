@@ -119,7 +119,7 @@ export default {
       }
     }
     // TODO: remove this line after AIP can communicate with PES
-    localStorage.setItem('seed_pes', JSON.stringify(seed))
+    // localStorage.setItem('seed_pes', JSON.stringify(seed))
   },
   methods: {
     /**
@@ -361,7 +361,8 @@ export default {
     genCredentials() {
       // Get seed from localStorage
       // TODO: change seed_pes to seed on communication success
-      let seed = localStorage.seed_pes
+      let seed = localStorage.seed
+      console.log(seed)
       let currentCourseId = this.tasks[this.currentStage - 1].id
       let rynmParams = this.rynmParams
 
