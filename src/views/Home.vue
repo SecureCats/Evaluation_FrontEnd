@@ -32,7 +32,7 @@
 
     <v-content id="main-contents" v-if="initialized">
       <Contents :tasks="tasks" :studentInfo="studentInfo" />
-      <iframe id="f1" src="http://localhost:8001" frameborder="5" style="height:0;width:0;"></iframe>
+      <iframe id="f1" src="https://aip.tapes.ga" frameborder="5" style="height:0;width:0;"></iframe>
     </v-content>
   </v-layout>
 </template>
