@@ -360,6 +360,7 @@ export default {
      */
     genCredentials() {
       // Get seed from localStorage
+      // TODO: change seed_pes to seed on communication success
       let seed = localStorage.seed_pes
       let currentCourseId = this.tasks[this.currentStage - 1].id
       let rynmParams = this.rynmParams
