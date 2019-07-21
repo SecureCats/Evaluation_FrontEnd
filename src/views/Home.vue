@@ -61,7 +61,6 @@ export default {
   },
   mounted () {
     // * Cross-origin communication
-    // TODO: fix cross-origin communication
     window.addEventListener('message', function(evt) {
       if (typeof evt.data !== 'string' || evt.data.startsWith('on')) return
       // console.log(evt.origin)

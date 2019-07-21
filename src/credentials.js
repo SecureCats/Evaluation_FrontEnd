@@ -15,7 +15,6 @@ function genRandom(digit) {
 export function generate(seed, currentCourseId, rynmParams) {
   let credentials = {}
 
-  seed = JSON.parse(seed)
   // console.log('[WORKER]', seed)
 
   // Signatures: (s, e, v)
