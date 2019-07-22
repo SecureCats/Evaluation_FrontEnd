@@ -1,16 +1,28 @@
 import SHA256 from 'crypto-js/sha256'
-const BigInteger = require('jsbn').BigInteger
+// const bigInt = require('jsbn').bigInt
+var bigInt = require("big-integer");
 
 // * Credential generation algorithm
 function hash(val) {
-  return new BigInteger(SHA256(val.toString()).toString(), 16).mod(
-    new BigInteger('731499577')
+  return bigInt(SHA256(val.toString()).toString(), 16).mod(
+    bigInt('731499577')
   )
 }
 
+// wrong impl
 function genRandom(digit) {
   return Math.floor(Math.random() * Math.pow(2, digit)).toString()
 }
+
+let generate_32_bit_hex = () =>
+  SHA256(Math.random().toString(16), 16).substring(2, 2 + 8);
+let generate_random_bigint = length => {
+  let bitNum = "";
+  for (let i = 0; i < length / 32; i += 1) bitNum += generate_32_bit_hex();
+  return bigInt(bitNum, 16);
+};
+
+
 
 export function generate(seed, currentCourseId, rynmParams) {
   let credentials = {}
@@ -37,165 +49,163 @@ export function generate(seed, currentCourseId, rynmParams) {
   // Generate randoms
   let randAttr = ['s', 'e', 'w', 'z', 'x']
   randAttr.forEach(i => {
-    priv['r' + i] = genRandom(32)
+    priv['r' + i] = generate_random_bigint(32)
   })
   for (let i = 0; i < 20; i++) {
-    priv['r' + i.toString()] = Math.floor(
-      Math.random() * Math.pow(2, 32)
-    ).toString()
+    priv['r' + i.toString()] = generate_random_bigint(32)
   }
 
-  priv['w'] = genRandom(32)
-  priv['r'] = genRandom(32)
-  priv['r_'] = new BigInteger(priv['rz']).subtract(
-    new BigInteger(e).multiply(new BigInteger(priv['rw']))
+  priv['w'] = generate_random_bigint(32)
+  priv['r'] = generate_random_bigint(32)
+  priv['r_'] = bigInt(priv['rz']).subtract(
+    bigInt(e).multiply(bigInt(priv['rw']))
   )
   // console.log('[WORKER]', priv)
 
   // Calculate C sets
   let grnym = hash(currentCourseId).modPow(
-    new BigInteger(rynmParams.exp),
-    new BigInteger(rynmParams.gamma)
+    bigInt(rynmParams.exp),
+    bigInt(rynmParams.gamma)
   )
 
-  params['Cs'] = new BigInteger(g)
-    .modPow(new BigInteger(s), new BigInteger(n))
+  params['Cs'] = bigInt(g)
+    .modPow(bigInt(s), bigInt(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['rs']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['rs']), bigInt(n))
     )
-    .mod(new BigInteger(n))
-  params['Ce'] = new BigInteger(g)
-    .modPow(new BigInteger(e), new BigInteger(n))
+    .mod(bigInt(n))
+  params['Ce'] = bigInt(g)
+    .modPow(bigInt(e), bigInt(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['re']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['re']), bigInt(n))
     )
-    .mod(new BigInteger(n))
-  params['Cv'] = new BigInteger(v)
+    .mod(bigInt(n))
+  params['Cv'] = bigInt(v)
     .multiply(
-      new BigInteger(g).modPow(new BigInteger(priv['w']), new BigInteger(n))
+      bigInt(g).modPow(bigInt(priv['w']), bigInt(n))
     )
-    .mod(new BigInteger(n))
-  params['Cw'] = new BigInteger(g)
-    .modPow(new BigInteger(priv['w']), new BigInteger(n))
+    .mod(bigInt(n))
+  params['Cw'] = bigInt(g)
+    .modPow(bigInt(priv['w']), bigInt(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['rw']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['rw']), bigInt(n))
     )
-    .mod(new BigInteger(n))
-  priv['z'] = new BigInteger(e).multiply(new BigInteger(priv['w']))
+    .mod(bigInt(n))
+  priv['z'] = bigInt(e).multiply(bigInt(priv['w']))
   params['C'] = params['Cv']
-    .modPow(new BigInteger(e), new BigInteger(n))
+    .modPow(bigInt(e), bigInt(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['r']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['r']), bigInt(n))
     )
-    .mod(new BigInteger(n))
-  params['Cx'] = new BigInteger(g)
-    .modPow(new BigInteger(uk), new BigInteger(n))
+    .mod(bigInt(n))
+  params['Cx'] = bigInt(g)
+    .modPow(bigInt(uk), bigInt(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['rx']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['rx']), bigInt(n))
     )
-    .mod(new BigInteger(n))
-  params['Cz'] = new BigInteger(g)
-    .modPow(priv['z'], new BigInteger(n))
+    .mod(bigInt(n))
+  params['Cz'] = bigInt(g)
+    .modPow(priv['z'], bigInt(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['rz']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['rz']), bigInt(n))
     )
-    .mod(new BigInteger(n))
+    .mod(bigInt(n))
 
   // Calculate Y sets
   params['y1'] = params['Cv']
-    .modPow(new BigInteger(priv['r1']), new BigInteger(n))
+    .modPow(bigInt(priv['r1']), bigInt(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['r2']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['r2']), bigInt(n))
     )
-    .mod(new BigInteger(n))
-  params['y2'] = new BigInteger(g)
-    .modPow(new BigInteger(priv['r1']), new BigInteger(n))
+    .mod(bigInt(n))
+  params['y2'] = bigInt(g)
+    .modPow(bigInt(priv['r1']), bigInt(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['r3']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['r3']), bigInt(n))
     )
-    .mod(new BigInteger(n))
-  params['y3'] = new BigInteger(a)
-    .modPow(new BigInteger(priv['r4']), new BigInteger(n))
+    .mod(bigInt(n))
+  params['y3'] = bigInt(a)
+    .modPow(bigInt(priv['r4']), bigInt(n))
     .multiply(
-      new BigInteger(b).modPow(new BigInteger(priv['r5']), new BigInteger(n))
-    )
-    .multiply(
-      new BigInteger(g).modPow(new BigInteger(priv['r6']), new BigInteger(n))
+      bigInt(b).modPow(bigInt(priv['r5']), bigInt(n))
     )
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['r7']), new BigInteger(n))
+      bigInt(g).modPow(bigInt(priv['r6']), bigInt(n))
     )
-    .mod(new BigInteger(n))
-  params['y4'] = new BigInteger(g)
-    .modPow(new BigInteger(priv['r4']), new BigInteger(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['r8']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['r7']), bigInt(n))
     )
-    .mod(new BigInteger(n))
-  params['y5'] = new BigInteger(g)
-    .modPow(new BigInteger(priv['r5']), new BigInteger(n))
+    .mod(bigInt(n))
+  params['y4'] = bigInt(g)
+    .modPow(bigInt(priv['r4']), bigInt(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['r9']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['r8']), bigInt(n))
     )
-    .mod(new BigInteger(n))
-  params['y6'] = new BigInteger(g)
-    .modPow(new BigInteger(priv['r10']), new BigInteger(n))
+    .mod(bigInt(n))
+  params['y5'] = bigInt(g)
+    .modPow(bigInt(priv['r5']), bigInt(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['r11']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['r9']), bigInt(n))
     )
-    .mod(new BigInteger(n))
-  params['y7'] = new BigInteger(g)
-    .modPow(new BigInteger(priv['r6']), new BigInteger(n))
+    .mod(bigInt(n))
+  params['y6'] = bigInt(g)
+    .modPow(bigInt(priv['r10']), bigInt(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['r12']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['r11']), bigInt(n))
     )
-    .mod(new BigInteger(n))
+    .mod(bigInt(n))
+  params['y7'] = bigInt(g)
+    .modPow(bigInt(priv['r6']), bigInt(n))
+    .multiply(
+      bigInt(h).modPow(bigInt(priv['r12']), bigInt(n))
+    )
+    .mod(bigInt(n))
   params['y8'] = params['Cv']
-    .modPow(new BigInteger(priv['r10']), new BigInteger(n))
+    .modPow(bigInt(priv['r10']), bigInt(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['r7']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['r7']), bigInt(n))
     )
-    .mod(new BigInteger(n))
-  params['y9'] = new BigInteger(g)
-    .modPow(new BigInteger(priv['r13']), new BigInteger(n))
+    .mod(bigInt(n))
+  params['y9'] = bigInt(g)
+    .modPow(bigInt(priv['r13']), bigInt(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['r14']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['r14']), bigInt(n))
     )
-    .mod(new BigInteger(n))
-  params['y10'] = new BigInteger(g)
-    .modPow(new BigInteger(priv['r15']), new BigInteger(n))
+    .mod(bigInt(n))
+  params['y10'] = bigInt(g)
+    .modPow(bigInt(priv['r15']), bigInt(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['r16']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['r16']), bigInt(n))
     )
-    .mod(new BigInteger(n))
-  params['y11'] = new BigInteger(g)
-    .modPow(new BigInteger(priv['r17']), new BigInteger(n))
+    .mod(bigInt(n))
+  params['y11'] = bigInt(g)
+    .modPow(bigInt(priv['r17']), bigInt(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['r18']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['r18']), bigInt(n))
     )
-    .mod(new BigInteger(n))
+    .mod(bigInt(n))
   params['y12'] = params['Cw']
-    .modPow(new BigInteger(priv['r17']), new BigInteger(n))
+    .modPow(bigInt(priv['r17']), bigInt(n))
     .multiply(
-      new BigInteger(h).modPow(new BigInteger(priv['r19']), new BigInteger(n))
+      bigInt(h).modPow(bigInt(priv['r19']), bigInt(n))
     )
-    .mod(new BigInteger(n))
+    .mod(bigInt(n))
   params['y13'] = grnym.modPow(
-    new BigInteger(priv['r4']),
-    new BigInteger(rynmParams.gamma)
+    bigInt(priv['r4']),
+    bigInt(rynmParams.gamma)
   )
 
   // Calculate x sets
   params['x'] = hash(
-    new BigInteger(g)
-      .multiply(new BigInteger(h))
-      .multiply(params['C'])
-      .multiply(params['Cv'])
-      .multiply(params['Cs'])
-      .multiply(params['Ce'])
-      .multiply(params['Cx'])
-      .multiply(params['Cz'])
-      .multiply(params['Cw'])
+    bigInt(g)
+    .multiply(bigInt(h))
+    .multiply(params['C'])
+    .multiply(params['Cv'])
+    .multiply(params['Cs'])
+    .multiply(params['Ce'])
+    .multiply(params['Cx'])
+    .multiply(params['Cz'])
+    .multiply(params['Cw'])
   )
 
   // Calculate z sets
@@ -223,19 +233,19 @@ export function generate(seed, currentCourseId, rynmParams) {
   ]
   arr.forEach(j => {
     i = i + 1
-    params['z' + i.toString()] = new BigInteger(
+    params['z' + i.toString()] = bigInt(
       priv['r' + i.toString()].toString()
     ).add(
-      new BigInteger(params['x'].toString()).multiply(
-        new BigInteger(j.toString())
+      bigInt(params['x'].toString()).multiply(
+        bigInt(j.toString())
       )
     )
   })
 
   // Calculate rnym
   params['rnym'] = grnym.modPow(
-    new BigInteger(uk),
-    new BigInteger(rynmParams.gamma)
+    bigInt(uk),
+    bigInt(rynmParams.gamma)
   )
 
   for (let key in params) {
