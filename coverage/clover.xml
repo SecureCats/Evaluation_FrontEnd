@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1563764059093" clover="3.2.0">
+  <project timestamp="1563764059093" name="All files">
+    <metrics statements="6" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0" elements="7" coveredelements="5" complexity="0" loc="6" ncloc="6" packages="2" files="3" classes="3">
+      <package name="assets">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <file name="icon.png" path="/home/fky/code/git/mine/Evaluation_BackEnd/Evaluation_FrontEnd/src/assets/icon.png">
+          <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+          <line num="1" count="1" type="stmt"/>
+        </file>
+        <file name="success.png" path="/home/fky/code/git/mine/Evaluation_BackEnd/Evaluation_FrontEnd/src/assets/success.png">
+          <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+          <line num="1" count="1" type="stmt"/>
+        </file>
+      </package>
+      <package name="views">
+        <metrics statements="4" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <file name="Success.vue" path="/home/fky/code/git/mine/Evaluation_BackEnd/Evaluation_FrontEnd/src/views/Success.vue">
+          <metrics statements="4" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+          <line num="26" count="1" type="stmt"/>
+          <line num="34" count="1" type="stmt"/>
+          <line num="45" count="1" type="stmt"/>
+          <line num="46" count="0" type="stmt"/>
+        </file>
+      </package>
+    </metrics>
+  </project>
+</coverage>
