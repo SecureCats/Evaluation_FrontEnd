@@ -16,6 +16,7 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
   },
+  coverageReporters: ["json", "lcov", "text", "clover", "json-summary"],
   snapshotSerializers: [
     'jest-serializer-vue'
   ],
