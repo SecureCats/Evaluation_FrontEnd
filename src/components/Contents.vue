@@ -50,6 +50,7 @@ import EvaluationTasks from '@/components/EvaluationTasks'
 
 import Cookies from 'js-cookie'
 import worker from 'workerize-loader!./../credentials'
+const wasm = import('wasm-game-of-life')
 
 export default {
   name: 'Contents',
@@ -332,8 +333,13 @@ export default {
       let rynmParams = this.rynmParams
 
       // Launch concurrent web worker threads to implement non-blocking calculations
-      let credentialWorker = worker()
-      return credentialWorker.generate(seed, currentCourseId, rynmParams)
+      // let credentialWorker = worker()
+      // return credentialWorker.generate(seed, currentCourseId, rynmParams)
+      wasm.then(f => {
+        let ret =  f.greet(seed.signature.s, seed.signature.e, seed.signature.v, seed.uk, seed.pubkey.a, seed.pubkey.b, seed.pubkey.g, seed.pubkey.h, seed.pubkey.n, rynmParams.exp, rynmParams.gamma, currentCourseId)
+        console.log(ret)
+        return ret;
+      })
     }
   }
 }
