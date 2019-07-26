@@ -12,7 +12,7 @@
       <v-layout id="tips-container" column align-start class="headline">
         <span id="title">耶，你的评教任务已经提交成功！</span>
         <span id="subtitle">Congratulations! Your answers have been received.</span>
-        <v-btn id="backBtn" large color="#EB7E44" round outline>
+        <v-btn @click="ret2aip" id="backBtn" large color="#EB7E44" round outline>
           <v-icon left small>arrow_back</v-icon>返回教务处
         </v-btn>
       </v-layout>
@@ -42,9 +42,15 @@ export default {
       ],
       particlesPerFrame: 0.5
     })
+    
     setTimeout(() => {
       this.$confetti.stop()
     }, 3000)
+  },
+  methods:{
+     ret2aip: function() {
+      window.location.href = 'https://aip.fates.felinae98.cn/home'
+    }
   }
 }
 </script>

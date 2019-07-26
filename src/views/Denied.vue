@@ -13,7 +13,7 @@
         <span id="title">身份认证失败，请不要搞事情。</span>
         <span id="subtitle">Authentication failed.</span>
         <v-layout row>
-          <v-btn id="backBtn" large color="#EB7E44" round outline>
+          <v-btn @click="ret2aip" id="backBtn" large color="#EB7E44" round outline>
             <v-icon left small>arrow_back</v-icon>返回教务处
           </v-btn>
         </v-layout>
@@ -30,6 +30,11 @@ import Footer from '@/components/Footer'
 export default {
   components: {
     Footer
+  },
+  methods:{
+     ret2aip: function() {
+      window.location.href = 'https://aip.fates.felinae98.cn/home'
+    }
   }
 }
 </script>
