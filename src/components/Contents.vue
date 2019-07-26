@@ -50,7 +50,7 @@ import EvaluationTasks from '@/components/EvaluationTasks'
 
 import Cookies from 'js-cookie'
 import worker from 'workerize-loader!./../credentials'
-const wasm = import('wasm-game-of-life')
+const wasm = import('credential-wasm-alternative')
 
 export default {
   name: 'Contents',
